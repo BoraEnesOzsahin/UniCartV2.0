@@ -3,21 +3,53 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}UniCart{% endblock %}</title>
+  <title>{% block title %}UniCart | Campus Marketplace{% endblock %}</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'uni-orange': '#FF5F1F',
+            'uni-cream': '#F9F9F7',
+            'uni-black': '#1A1A1A',
+          },
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body { background-color: #F9F9F7; }
+    .varsity-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    .varsity-card:hover { transform: translateY(-6px); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1); }
+    .text-outline { -webkit-text-stroke: 1px black; color: transparent; }
+  </style>
+
   {% load static %}
-  <link rel="stylesheet" href="{% static 'css/main.css' %}">
-  <link rel="stylesheet" href="{% static 'css/ui-design.css' %}">
   {% block extra_css %}{% endblock %}
 </head>
-<body>
+<body class="font-sans antialiased text-uni-black">
 
   {% include 'partials/navbar.html' %}
 
   <!-- Flash messages (success / error feedback) -->
   {% if messages %}
-    <div class="messages">
+    <div class="max-w-7xl mx-auto px-6 mt-4">
       {% for message in messages %}
-        <div class="message message--{{ message.tags }}">{{ message }}</div>
+        <div class="message message--{{ message.tags }} bg-{{ message.tags }}-50 border border-{{ message.tags }}-200 text-{{ message.tags }}-700 px-4 py-3 rounded-lg mb-2">
+          {{ message }}
+        </div>
       {% endfor %}
     </div>
   {% endif %}
