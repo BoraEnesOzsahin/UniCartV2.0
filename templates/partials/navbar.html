@@ -3,19 +3,21 @@
      Use {{ request.user.is_authenticated }} to
      show different links for logged-in users.
 ──────────────────────────────────────────── -->
-<nav>
-  <a href="{% url 'home' %}" class="nav-logo">UniCart</a>
+<header>
+  <nav>
+    <a href="{% url 'home' %}" class="nav-brand">Uni<span>Cart</span></a>
 
-  <ul class="nav-links">
-    <li><a href="{% url 'listing_list' %}">Browse</a></li>
+    <ul class="nav-links">
+      <li><a href="{% url 'listing_list' %}">Browse</a></li>
 
-    {% if user.is_authenticated %}
-      <li><a href="{% url 'listing_create' %}">+ Sell</a></li>
-      <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
-      <li><a href="{% url 'logout' %}">Logout</a></li>
-    {% else %}
-      <li><a href="{% url 'login' %}">Login</a></li>
-      <li><a href="{% url 'register' %}">Register</a></li>
-    {% endif %}
-  </ul>
-</nav>
+      {% if user.is_authenticated %}
+        <li><a href="{% url 'listing_create' %}">+ Sell</a></li>
+        <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+        <li><a href="{% url 'logout' %}">Logout</a></li>
+      {% else %}
+        <li><a href="{% url 'login' %}">Login</a></li>
+        <li><a href="{% url 'register' %}">Register</a></li>
+      {% endif %}
+    </ul>
+  </nav>
+</header>

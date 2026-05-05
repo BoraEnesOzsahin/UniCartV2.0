@@ -38,7 +38,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'unicart.urls'
+ROOT_URLCONF = 'UniCart.urls'
 
 
 # ── Templates ─────────────────────────────

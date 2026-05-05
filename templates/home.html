@@ -2,41 +2,70 @@
 {% block title %}UniCart — University Marketplace{% endblock %}
 {% block content %}
 
-<!-- ── HOME PAGE ────────────────────────────
-     Data passed from views.py:
-       - listings   → 6 newest active listings
-       - categories → all categories
-──────────────────────────────────────────── -->
-
+<!-- ── HERO SECTION ──────────────────────── -->
 <section class="hero">
-  <h1>Buy & sell with your <em>uni</em> community</h1>
-  <p>Textbooks, electronics, furniture — all from fellow students.</p>
-  <a href="{% url 'listing_list' %}">Browse listings →</a>
-  <a href="{% url 'listing_create' %}">Sell something</a>
-</section>
-
-<!-- Category links -->
-<section class="categories-section">
-  <h2>Browse categories</h2>
-  <div class="cat-grid">
-    {% for cat in categories %}
-      <a href="{% url 'listing_list' %}?category={{ cat.slug }}" class="cat-item">
-        <span class="cat-icon">{{ cat.icon }}</span>
-        <span class="cat-name">{{ cat.name }}</span>
-      </a>
-    {% endfor %}
+  <div class="container">
+    <h1>Buy & Sell within your <em>Campus</em></h1>
+    <p>Discover a vibrant peer-to-peer marketplace where university students connect to buy and sell everything from textbooks to tech.</p>
+    <div class="hero-buttons">
+      <a href="{% url 'listing_list' %}" class="btn btn-primary">Browse Listings</a>
+      <a href="{% url 'listing_create' %}" class="btn btn-secondary">Post an Item</a>
+    </div>
   </div>
 </section>
 
-<!-- Recent listings -->
+<!-- ── STATISTICS SECTION (BENTO BOX) ──── -->
+<section class="stats-section">
+  <div class="container">
+    <h2>UniCart by the Numbers</h2>
+    <div class="stats-grid">
+      <div class="stat-card stat-card--large">
+        <div class="stat-number">5K+</div>
+        <div class="stat-label">Active Listings</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">2K</div>
+        <div class="stat-label">Active Students</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">₺</div>
+        <div class="stat-label">Saved Monthly</div>
+      </div>
+      <div class="stat-card stat-card--accent">
+        <div class="stat-number">⚡</div>
+        <div class="stat-label">Lightning Fast</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CATEGORIES SECTION ────────────────── -->
+<section class="categories-section">
+  <div class="container">
+    <h2>Browse by Category</h2>
+    <div class="cat-grid">
+      {% for cat in categories %}
+        <a href="{% url 'listing_list' %}?category={{ cat.slug }}" class="cat-item">
+          <span class="cat-icon">{{ cat.icon }}</span>
+          <span class="cat-name">{{ cat.name }}</span>
+          <span class="cat-arrow">→</span>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ── RECENT LISTINGS ────────────────────── -->
 <section class="listings-section">
-  <h2>Recently listed</h2>
-  <div class="listing-grid">
-    {% for listing in listings %}
-      {% include 'partials/listing_card.html' with listing=listing %}
-    {% empty %}
-      <p>No listings yet. <a href="{% url 'listing_create' %}">Be the first!</a></p>
-    {% endfor %}
+  <div class="container">
+    <h2>Recently Listed</h2>
+    <div class="listings-grid">
+      {% for listing in listings %}
+        {% include 'partials/listing_card.html' with listing=listing %}
+      {% empty %}
+        <p class="no-listings">No listings yet. <a href="{% url 'listing_create' %}" class="link-accent">Be the first to post!</a></p>
+      {% endfor %}
+    </div>
   </div>
 </section>
 
