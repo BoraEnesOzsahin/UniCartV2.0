@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Email Verified{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h2 class="card-title mb-4">Email Verified!</h2>
+                    
+                    <div class="alert alert-success" role="alert">
+                        <p>Your email has been successfully verified.</p>
+                        <p>You can now log in to your account.</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <i class="fas fa-check-circle" style="font-size: 3rem; color: #28a745;"></i>
+                    </div>
+
+                    <p class="text-muted mb-4">
+                        Welcome to UniCart! Your account is ready to use.
+                    </p>
+
+                    <a href="{% url 'login' %}" class="btn btn-primary btn-lg">
+                        Go to Login
+                    </a>
+
+                    <a href="{% url 'home' %}" class="btn btn-secondary btn-lg ms-2">
+                        Back to Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border: none;
+    }
+</style>
+{% endblock %}

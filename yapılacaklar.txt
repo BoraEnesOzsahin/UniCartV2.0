@@ -1,0 +1,7 @@
+-favorileme yok
+
+-dark mode yok, settings
+
+-listinge girince ui yok.
+
+-user auth yok

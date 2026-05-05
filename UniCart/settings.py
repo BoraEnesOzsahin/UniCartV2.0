@@ -1,5 +1,6 @@
 from pathlib import Path
 import os
+from dotenv import load_dotenv
 
 # ─────────────────────────────────────────
 #  SETTINGS.PY  — project configuration
@@ -7,7 +8,10 @@ import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'replace-this-with-a-real-secret-key-before-deployment'
+# Load environment variables from .env file
+load_dotenv(BASE_DIR / '.env')
+
+SECRET_KEY = os.getenv('SECRET_KEY', 'replace-this-with-a-real-secret-key-before-deployment')
 
 DEBUG = True   # ← set to False when deploying
 
@@ -26,6 +30,7 @@ INSTALLED_APPS = [
     # Your apps ↓ (add them here after running startapp)
     'listings',
     'users',
+    'marketplace',
 ]
 
 MIDDLEWARE = [
@@ -79,6 +84,20 @@ MEDIA_ROOT = BASE_DIR / 'media'            # uploaded images saved here
 LOGIN_URL          = '/users/login/'        # where @login_required sends non-logged-in users
 LOGIN_REDIRECT_URL = '/'                   # where to go after successful login
 LOGOUT_REDIRECT_URL = '/'
+
+# ── Email Configuration ───────────────────
+# Development: Console backend (prints emails to terminal)
+# Production: Switch to Outlook SMTP with app password
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# Outlook SMTP Config (for production):
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp-mail.outlook.com'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+# EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LANGUAGE_CODE = 'en-us'
