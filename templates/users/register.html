@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Register — UniCart{% endblock %}
+{% block content %}
+
+<h1>Join UniCart</h1>
+
+<form method="POST">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Create account</button>
+</form>
+
+<p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
+
+{% endblock %}

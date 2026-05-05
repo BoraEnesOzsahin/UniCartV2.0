@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block title %}Welcome{% endblock %}
+
+{% block content %}
+<div class="container">
+    <section class="hero">
+        <h1>Welcome to UniCart</h1>
+        <p>Your university marketplace for buying and selling items</p>
+        {% if not user.is_authenticated %}
+            <div class="cta-buttons">
+                <a href="{% url 'register' %}" class="btn btn-primary">Get Started</a>
+                <a href="{% url 'login' %}" class="btn btn-secondary">Login</a>
+            </div>
+        {% endif %}
+    </section>
+
+    <section class="featured-listings">
+        <h2>Featured Listings</h2>
+        <div class="listings-grid">
+            {% for listing in featured_listings %}
+            <div class="listing-card">
+                <div class="listing-content">
+                    <h3>{{ listing.title }}</h3>
+                    <p class="price">${{ listing.price }}</p>
+                    <p class="seller">by {{ listing.seller.username }}</p>
+                    <a href="{% url 'listing_detail' listing.pk %}" class="btn btn-secondary">View Details</a>
+                </div>
+            </div>
+            {% empty %}
+            <p>No listings available.</p>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="categories">
+        <h2>Browse Categories</h2>
+        <div class="category-grid">
+            {% for category in categories %}
+            <a href="{% url 'listing_list' %}?category={{ category.id }}" class="category-card">
+                <h3>{{ category.name }}</h3>
+            </a>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+<style>
+/* Basic styles */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Navigation */
+header {
+    background-color: #333;
+    padding: 1rem 0;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    margin-left: 1rem;
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    border-radius: 4px;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+</style>

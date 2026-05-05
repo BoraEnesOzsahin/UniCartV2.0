@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}{{ listing.title }} — UniCart{% endblock %}
+{% block content %}
+
+<!-- ── LISTING DETAIL PAGE ───────────────────
+     Data passed from views.py:
+       - listing → the full Listing object
+──────────────────────────────────────────── -->
+
+<div class="listing-detail">
+  {% if listing.image %}
+    <img src="{{ listing.image.url }}" alt="{{ listing.title }}">
+  {% endif %}
+
+  <h1>{{ listing.title }}</h1>
+  <p class="price">₺{{ listing.price }}</p>
+  <span class="condition">{{ listing.get_condition_display }}</span>
+  <p class="description">{{ listing.description }}</p>
+
+  <div class="seller-info">
+    <p>Sold by: <a href="{% url 'profile' listing.seller.username %}">{{ listing.seller.username }}</a></p>
+    <p>Posted: {{ listing.created_at|date:"d M Y" }}</p>
+  </div>
+
+  <!-- Show edit/delete only to the seller -->
+  {% if user == listing.seller %}
+    <a href="{% url 'listing_edit' listing.pk %}">Edit listing</a>
+    <a href="{% url 'listing_delete' listing.pk %}">Delete</a>
+  {% endif %}
+</div>
+
+{% endblock %}

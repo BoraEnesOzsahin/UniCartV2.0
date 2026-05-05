@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard — UniCart{% endblock %}
+{% block content %}
+
+<!-- ── DASHBOARD PAGE ────────────────────────
+     Data passed from views.py:
+       - my_listings  → current user's listings
+       - my_favorites → current user's saved items
+──────────────────────────────────────────── -->
+
+<h1>Welcome, {{ user.username }}</h1>
+
+<section>
+  <h2>My listings</h2>
+  <a href="{% url 'listing_create' %}">+ Post new item</a>
+  <div class="listing-grid">
+    {% for listing in my_listings %}
+      {% include 'partials/listing_card.html' with listing=listing %}
+    {% empty %}
+      <p>You haven't posted anything yet.</p>
+    {% endfor %}
+  </div>
+</section>
+
+<section>
+  <h2>My favorites</h2>
+  <div class="listing-grid">
+    {% for fav in my_favorites %}
+      {% include 'partials/listing_card.html' with listing=fav.listing %}
+    {% empty %}
+      <p>No saved items yet.</p>
+    {% endfor %}
+  </div>
+</section>
+
+{% endblock %}

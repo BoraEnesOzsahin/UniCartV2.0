@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete Listing - UniCart{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="delete-confirmation">
+        <h2>Delete Listing</h2>
+        <div class="alert alert-warning">
+            <p>Are you sure you want to delete "{{ listing.title }}"?</p>
+            <p>This action cannot be undone.</p>
+        </div>
+        
+        <div class="listing-preview">
+            <h3>{{ listing.title }}</h3>
+            {% if listing.image %}
+                <img src="{{ listing.image.url }}" alt="{{ listing.title }}" class="preview-image">
+            {% endif %}
+            <p class="price">Price: ${{ listing.price }}</p>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-actions">
+                <button type="submit" class="btn btn-danger">Confirm Delete</button>
+                <a href="{% url 'listing_detail' listing.pk %}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

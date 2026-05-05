@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}My Profile - UniCart{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="profile-page">
+        <div class="profile-header">
+            <h1>My Profile</h1>
+            <div class="profile-stats">
+                <span class="stat">
+                    <strong>Username:</strong> {{ user.username }}
+                </span>
+                <span class="stat">
+                    <strong>Email:</strong> {{ user.email }}
+                </span>
+                <span class="stat">
+                    <strong>University:</strong> {{ user.profile.university }}
+                </span>
+            </div>
+        </div>
+
+        <div class="profile-content">
+            <div class="profile-section">
+                <h2>Update Profile</h2>
+                <form method="post" class="profile-form">
+                    {% csrf_token %}
+                    {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                            {% for error in field.errors %}
+                                <small class="error-text">{{ error }}</small>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary">Update Profile</button>
+                </form>
+            </div>
+
+            <div class="profile-section">
+                <h2>My Listings</h2>
+                {% if user.profile.is_seller %}
+                    <div class="listings-grid">
+                        {% for listing in user_listings %}
+                        <div class="listing-card">
+                            <div class="listing-image">
+                                {% if listing.image %}
+                                    <img src="{{ listing.image.url }}" alt="{{ listing.title }}">
+                                {% else %}
+                                    <div class="no-image">No image</div>
+                                {% endif %}
+                            </div>
+                            <div class="listing-content">
+                                <h3>{{ listing.title }}</h3>
+                                <p class="price">${{ listing.price }}</p>
+                                <div class="listing-actions">
+                                    <a href="{% url 'listing_detail' listing.pk %}" class="btn btn-secondary">View</a>
+                                    <a href="{% url 'listing_edit' listing.pk %}" class="btn btn-primary">Edit</a>
+                                    <a href="{% url 'listing_delete' listing.pk %}" class="btn btn-danger">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <p class="no-listings">You haven't created any listings yet.</p>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="become-seller">
+                        <p>Want to sell items? Enable seller mode in your profile settings.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}Browse Listings — UniCart{% endblock %}
+{% block content %}
+
+<!-- ── LISTING LIST PAGE ─────────────────────
+     Data passed from views.py:
+       - listings   → paginated queryset
+       - categories → for filter sidebar
+       - query      → current search term
+──────────────────────────────────────────── -->
+
+<!-- Search bar -->
+<form method="GET" action="{% url 'listing_list' %}">
+  <input type="text" name="q" value="{{ query|default:'' }}" placeholder="Search listings...">
+  <select name="category">
+    <option value="">All categories</option>
+    {% for cat in categories %}
+      <option value="{{ cat.slug }}">{{ cat.name }}</option>
+    {% endfor %}
+  </select>
+  <button type="submit">Search</button>
+</form>
+
+<!-- Results -->
+<div class="listing-grid">
+  {% for listing in listings %}
+    {% include 'partials/listing_card.html' with listing=listing %}
+  {% empty %}
+    <p>No listings found.</p>
+  {% endfor %}
+</div>
+
+<!-- Pagination -->
+<div class="pagination">
+  {% if listings.has_previous %}
+    <a href="?page={{ listings.previous_page_number }}&q={{ query }}">← Prev</a>
+  {% endif %}
+
+  <span>Page {{ listings.number }} of {{ listings.paginator.num_pages }}</span>
+
+  {% if listings.has_next %}
+    <a href="?page={{ listings.next_page_number }}&q={{ query }}">Next →</a>
+  {% endif %}
+</div>
+
+{% endblock %}

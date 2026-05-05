@@ -1,0 +1,507 @@
+/* Modern Reset and Variables */
+:root {
+    /* Updated color palette for better contrast */
+    --primary-color: #1a237e;    /* Darker blue */
+    --accent-color: #1976d2;     /* Bright blue */
+    --success-color: #2e7d32;    /* Darker green */
+    --warning-color: #f57f17;    /* Darker yellow */
+    --danger-color: #c62828;     /* Darker red */
+    --text-color: #212121;       /* Almost black for text */
+    --text-light: #f5f5f5;       /* Light text for dark backgrounds */
+    --light-bg: #f5f5f5;         /* Light background */
+    --card-bg: #ffffff;          /* Card background */
+    --border-color: #e0e0e0;     /* Subtle border color */
+    
+    /* Keep existing spacing and layout variables */
+    --border-radius: 20px;
+    --border-radius-sm: 15px;
+    --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s ease;
+    --container-width: 1200px;
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 1.5rem;
+    --spacing-lg: 2rem;
+    --spacing-xl: 3rem;
+}
+
+/* Basic Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Layout */
+body {
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: #f5f6fa;
+}
+
+.container {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+    width: 100%;
+}
+
+/* Navigation */
+header {
+    background-color: white;
+    box-shadow: var(--box-shadow);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    padding: var(--spacing-sm) 0;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+}
+
+.nav-brand {
+    font-size: 1.75rem;
+    letter-spacing: -0.5px;
+}
+
+.nav-links {
+    display: flex;
+    gap: var(--spacing-md);
+    align-items: center;
+}
+
+.nav-links a {
+    padding: var(--spacing-xs) var(--spacing-md);
+    border-radius: var(--border-radius-sm);
+    color: var(--text-color);
+    font-weight: 500;
+}
+
+.nav-links a:hover {
+    background-color: var(--accent-color);
+    color: var(--text-light);
+}
+
+/* Hero Section */
+.hero {
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    color: var(--text-light);
+    padding: var(--spacing-xl) 0;
+    margin-bottom: var(--spacing-xl);
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+
+.hero::after {
+    content: '';
+    position: absolute;
+    bottom: -50%;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background: linear-gradient(transparent, rgba(255,255,255,0.1));
+    transform: skewY(-3deg);
+}
+
+.hero h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    opacity: 1;  /* Increased from 0.9 */
+    font-weight: 500;
+    margin-bottom: 2rem;
+}
+
+/* Cards */
+.listings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 300px)); /* Increased width range */
+    gap: var(--spacing-md);
+    padding: var(--spacing-md) 0;
+    justify-content: center;
+}
+
+.listing-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: var(--card-bg);
+    border-radius: var(--border-radius-sm);
+    box-shadow: var(--box-shadow);
+    transition: var(--transition);
+}
+
+.listing-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.listing-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md);
+    flex: 1;
+}
+
+.listing-content h3 {
+    color: var(--text-color);
+    font-weight: 600;
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.price {
+    color: var(--success-color);
+    font-weight: 700;
+    font-size: 1.25rem;
+}
+
+/* Buttons */
+.btn {
+    padding: var(--spacing-sm) var(--spacing-lg);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-xs);
+    min-width: 120px;
+    border-radius: var(--border-radius-sm);
+}
+
+.btn-primary {
+    background-color: var(--accent-color);
+    color: var(--text-light);
+}
+
+.btn-secondary {
+    background-color: var(--primary-color);
+    color: var(--text-light);
+}
+
+.btn-danger {
+    background-color: var(--danger-color);
+    color: var(--text-light);
+}
+
+/* Forms */
+.form-wrapper {
+    background: white;
+    padding: var(--spacing-xl);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    max-width: 600px;
+    margin: var(--spacing-lg) auto;
+}
+
+.search-section {
+    background: white;
+    padding: var(--spacing-lg);
+    border-radius: var(--border-radius);
+    margin-bottom: var(--spacing-lg);
+}
+
+.filter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-md);
+    margin: var(--spacing-md) 0;
+}
+
+/* Improved Category Header */
+.category-header {
+    background: white;
+    padding: var(--spacing-md) var(--spacing-lg);
+    margin: var(--spacing-lg) 0;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+/* Listing Image Styles */
+.listing-image {
+    position: relative;
+    width: 100%;
+    max-width: 450px; /* Slightly wider than 400px but not too big */
+    padding-top: 50%; /* Adjusted for wider appearance */
+    overflow: hidden;
+    background-color: var(--light-bg);
+    border-radius: var(--border-radius-sm) var(--border-radius-sm) 0 0;
+    margin: 0 auto;
+}
+
+.listing-image img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* Detail Page Image Styles */
+.listing-detail .listing-image {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%; /* 16:9 aspect ratio */
+    max-width: 800px; /* Increased max-width */
+    max-height: none; /* Remove max-height constraint */
+    margin: 0 auto;
+    border-radius: var(--border-radius);
+    overflow: hidden; /* Ensure image stays within bounds */
+}
+
+.listing-detail .listing-image img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Changed from cover to contain */
+    object-position: center;
+    background-color: var(--light-bg); /* Background for transparent images */
+}
+
+.no-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--light-bg);
+    color: var(--text-color);
+    font-size: 0.9rem;
+}
+
+/* Profile Page Image Styles */
+.profile-section .listing-image {
+    padding-top: 55%; /* Adjusted for wider appearance */
+    max-width: 300px; /* Slightly wider for profile view */
+    max-height: 220px;
+    margin: 0 auto;
+}
+
+/* Listing Detail Styles */
+.listing-detail {
+    max-width: 1000px;
+    margin: var(--spacing-xl) auto;
+    padding: var(--spacing-xl);
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+.listing-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--spacing-lg);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 2px solid var(--light-bg);
+}
+
+.listing-header h1 {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin-right: var(--spacing-md);
+}
+
+.listing-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.listing-grid {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    gap: var(--spacing-xl);
+    align-items: start;
+}
+
+.listing-info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+.price-tag {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--success-color);
+    padding: var(--spacing-md);
+    background: var(--success-color);
+    color: var(--text-light);
+    font-weight: 700;
+    border-radius: var(--border-radius-sm);
+    display: inline-block;
+}
+
+.seller-info {
+    padding: var(--spacing-md);
+    background: var(--light-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+}
+
+.seller-info h3 {
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-sm);
+    font-size: 1.2rem;
+}
+
+.seller-info p {
+    margin-bottom: var(--spacing-xs);
+    color: var(--text-color);
+    font-weight: 500;
+}
+
+.description {
+    line-height: 1.8;
+}
+
+.description h3 {
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-sm);
+    font-size: 1.2rem;
+}
+
+.category-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+    margin-top: var(--spacing-sm);
+}
+
+.category-tag {
+    background: var(--accent-color);
+    color: var(--text-light);
+    font-weight: 500;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius-sm);
+    font-size: 0.9rem;
+}
+
+/* Profile Listing Actions */
+.profile-section .listing-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-sm);
+    flex-wrap: wrap;
+}
+
+.profile-section .listing-actions .btn {
+    flex: 1;
+    min-width: 80px;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 0.9rem;
+}
+
+.profile-section .listing-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.profile-section .listing-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+/* Refined Responsive Design */
+@media (max-width: 768px) {
+    :root {
+        --spacing-lg: 1.5rem;
+        --spacing-xl: 2rem;
+    }
+
+    .container {
+        padding: 0 var(--spacing-sm);
+    }
+
+    nav {
+        flex-direction: column;
+        padding: var(--spacing-sm);
+        gap: var(--spacing-sm);
+    }
+
+    .nav-links {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .nav-links a {
+        width: 100%;
+        text-align: center;
+    }
+
+    .filter-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .listings-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .listing-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .listing-header h1 {
+        font-size: 2rem;
+        margin-right: 0;
+    }
+
+    .listing-actions {
+        width: 100%;
+    }
+
+    .listing-actions .btn {
+        flex: 1;
+    }
+
+    .price-tag {
+        font-size: 2rem;
+    }
+
+    .profile-section .listing-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .profile-section .listing-actions .btn {
+        width: 100%;
+        margin: 0;
+    }
+}
+
+/* Smooth Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(var(--spacing-sm));
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.listing-card {
+    animation: fadeIn 0.5s ease-out forwards;
+}

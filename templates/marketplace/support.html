@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}Support - UniCart{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="support-page">
+        <h1>Support Center</h1>
+        
+        <div class="support-grid">
+            <div class="support-section">
+                <h2>Frequently Asked Questions</h2>
+                <div class="faq-list">
+                    <div class="faq-item">
+                        <h3>How do I create a listing?</h3>
+                        <p>To create a listing, you need to be registered as a seller. Go to your profile, enable seller mode, then click "Create New Listing" on the listings page.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h3>How do I contact a seller?</h3>
+                        <p>When viewing a listing, you can see the seller's university and username. Contact them through your university email.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h3>Can I edit my listing?</h3>
+                        <p>Yes, you can edit or delete your listings at any time from your profile page or the listing detail page.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="support-section">
+                <h2>Contact Support</h2>
+                <div class="contact-info">
+                    <p>If you need additional help, you can reach us through:</p>
+                    <ul>
+                        <li>Email: support@unicart.example.com</li>
+                        <li>Support Hours: Monday-Friday, 9AM-5PM</li>
+                    </ul>
+                </div>
+                
+                <div class="support-form">
+                    <h3>Send us a message</h3>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="subject">Subject</label>
+                            <input type="text" id="subject" name="subject" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea id="message" name="message" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

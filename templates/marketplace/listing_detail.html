@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ listing.title }} - UniCart{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="listing-detail">
+        <div class="listing-header">
+            <h1>{{ listing.title }}</h1>
+            {% if user == listing.seller %}
+                <div class="listing-actions">
+                    <a href="{% url 'listing_edit' listing.pk %}" class="btn btn-secondary">Edit</a>
+                    <a href="{% url 'listing_delete' listing.pk %}" class="btn btn-danger">Delete</a>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="listing-grid">
+            <div class="listing-image">
+                {% if listing.image %}
+                    <img src="{{ listing.image.url }}" alt="{{ listing.title }}">
+                {% else %}
+                    <div class="no-image">No image available</div>
+                {% endif %}
+            </div>
+
+            <div class="listing-info">
+                <div class="price-tag">${{ listing.price }}</div>
+                
+                <div class="seller-info">
+                    <h3>Seller Information</h3>
+                    <p>Posted by: {{ listing.seller.username }}</p>
+                    <p>University: {{ listing.seller.profile.university }}</p>
+                    <p>Date Posted: {{ listing.date|date:"F j, Y" }}</p>
+                </div>
+
+                <div class="categories">
+                    <h3>Categories</h3>
+                    <div class="category-tags">
+                        {% for category in listing.categories.all %}
+                            <span class="category-tag">{{ category.name }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="description">
+                    <h3>Description</h3>
+                    <p>{{ listing.description }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

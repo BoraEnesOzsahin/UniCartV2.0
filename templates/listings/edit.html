@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}Edit {{ listing.title }} — UniCart{% endblock %}
+{% block content %}
+
+<h1>Edit listing</h1>
+
+<form method="POST" enctype="multipart/form-data">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Save changes</button>
+  <a href="{% url 'listing_detail' listing.pk %}">Cancel</a>
+</form>
+
+{% endblock %}

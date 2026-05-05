@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}{{ profile_user.username }} — UniCart{% endblock %}
+{% block content %}
+
+<h1>{{ profile_user.username }}'s listings</h1>
+
+<div class="listing-grid">
+  {% for listing in listings %}
+    {% include 'partials/listing_card.html' with listing=listing %}
+  {% empty %}
+    <p>This user has no active listings.</p>
+  {% endfor %}
+</div>
+
+{% endblock %}

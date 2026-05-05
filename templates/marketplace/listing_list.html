@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}Listings - UniCart{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="listings-page">
+        <div class="listings-header">
+            <h1>Browse Listings</h1>
+            {% if user.is_authenticated %}
+                <a href="{% url 'listing_create' %}" class="btn btn-primary">Create New Listing</a>
+            {% endif %}
+        </div>
+
+        <div class="search-section">
+            <form method="get" class="search-form">
+                <div class="search-box">
+                    {{ form.query.label_tag }}
+                    {{ form.query }}
+                </div>
+                
+                <div class="filter-grid">
+                    <div class="filter-group">
+                        {{ form.category.label_tag }}
+                        {{ form.category }}
+                    </div>
+                    <div class="filter-group">
+                        {{ form.min_price.label_tag }}
+                        {{ form.min_price }}
+                    </div>
+                    <div class="filter-group">
+                        {{ form.max_price.label_tag }}
+                        {{ form.max_price }}
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-secondary">Search</button>
+            </form>
+        </div>
+
+        {% if selected_category %}
+        <div class="category-header">
+            <h2>Listings in {{ selected_category.name }}</h2>
+        </div>
+        {% endif %}
+
+        <div class="listings-grid">
+            {% for listing in listings %}
+            <div class="listing-card">
+                <div class="listing-content">
+                    <h3>{{ listing.title }}</h3>
+                    <p class="price">${{ listing.price }}</p>
+                    <p class="seller">by {{ listing.seller.username }}</p>
+                    <a href="{% url 'listing_detail' listing.pk %}" class="btn btn-secondary">View Details</a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="no-listings">
+                <p>No listings found {% if selected_category %}in {{ selected_category.name }}{% endif %}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

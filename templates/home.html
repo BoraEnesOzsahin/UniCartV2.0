@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}UniCart — University Marketplace{% endblock %}
+{% block content %}
+
+<!-- ── HOME PAGE ────────────────────────────
+     Data passed from views.py:
+       - listings   → 6 newest active listings
+       - categories → all categories
+──────────────────────────────────────────── -->
+
+<section class="hero">
+  <h1>Buy & sell with your <em>uni</em> community</h1>
+  <p>Textbooks, electronics, furniture — all from fellow students.</p>
+  <a href="{% url 'listing_list' %}">Browse listings →</a>
+  <a href="{% url 'listing_create' %}">Sell something</a>
+</section>
+
+<!-- Category links -->
+<section class="categories-section">
+  <h2>Browse categories</h2>
+  <div class="cat-grid">
+    {% for cat in categories %}
+      <a href="{% url 'listing_list' %}?category={{ cat.slug }}" class="cat-item">
+        <span class="cat-icon">{{ cat.icon }}</span>
+        <span class="cat-name">{{ cat.name }}</span>
+      </a>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- Recent listings -->
+<section class="listings-section">
+  <h2>Recently listed</h2>
+  <div class="listing-grid">
+    {% for listing in listings %}
+      {% include 'partials/listing_card.html' with listing=listing %}
+    {% empty %}
+      <p>No listings yet. <a href="{% url 'listing_create' %}">Be the first!</a></p>
+    {% endfor %}
+  </div>
+</section>
+
+{% endblock %}
