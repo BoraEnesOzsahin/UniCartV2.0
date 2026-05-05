@@ -2,15 +2,57 @@
 {% block title %}Login — UniCart{% endblock %}
 {% block content %}
 
-<h1>Login</h1>
+<div class="min-h-[calc(100vh-120px)] flex items-center justify-center px-6 py-12">
+    <div class="w-full max-w-md">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-extrabold tracking-tighter mb-2">Welcome back</h1>
+            <p class="text-gray-500 font-medium">Sign in to your UniCart account</p>
+        </div>
 
-<form method="POST">
-  {% csrf_token %}
-  <input type="text"     name="username" placeholder="Username" required>
-  <input type="password" name="password" placeholder="Password" required>
-  <button type="submit">Login</button>
-</form>
+        <!-- Login Form -->
+        <form method="POST" class="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-lg">
+            {% csrf_token %}
+            
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="mb-4 p-4 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm font-medium">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
 
-<p>No account? <a href="{% url 'register' %}">Sign up</a></p>
+            <!-- Username -->
+            <div class="mb-6">
+                <label class="block text-sm font-bold text-uni-black mb-2">Username</label>
+                <input type="text" name="username" placeholder="Enter your username" required
+                       class="w-full px-4 py-3 border border-gray-200 rounded-xl outline-none focus:border-uni-orange focus:ring-2 focus:ring-orange-100 transition-all">
+            </div>
+
+            <!-- Password -->
+            <div class="mb-6">
+                <label class="block text-sm font-bold text-uni-black mb-2">Password</label>
+                <input type="password" name="password" placeholder="Enter your password" required
+                       class="w-full px-4 py-3 border border-gray-200 rounded-xl outline-none focus:border-uni-orange focus:ring-2 focus:ring-orange-100 transition-all">
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="w-full bg-uni-orange text-white py-4 rounded-2xl font-black text-lg hover:bg-uni-black transition-all duration-300 shadow-lg active:scale-95 mb-4">
+                Sign In
+            </button>
+
+            <!-- Sign Up Link -->
+            <p class="text-center text-gray-600 font-medium">
+                Don't have an account? 
+                <a href="{% url 'register' %}" class="text-uni-orange font-bold hover:underline">Sign up</a>
+            </p>
+        </form>
+
+        <!-- Footer -->
+        <p class="text-center text-gray-400 text-xs font-medium mt-6">
+            By signing in, you agree to our Terms of Service
+        </p>
+    </div>
+</div>
 
 {% endblock %}

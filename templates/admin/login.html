@@ -1,0 +1,191 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block extrastyle %}
+    {{ block.super }}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'uni-orange': '#FF5F1F',
+                        'uni-cream': '#F9F9F7',
+                        'uni-black': '#1A1A1A',
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #F9F9F7;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #container {
+            max-width: 28rem;
+            width: 100%;
+        }
+        #header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        #header h1 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            color: #1A1A1A;
+            margin-bottom: 0.5rem;
+        }
+        #login {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 2rem;
+            border: 1px solid #E5E7EB;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+        .form-row {
+            margin-bottom: 1.5rem;
+        }
+        label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: #1A1A1A;
+            margin-bottom: 0.5rem;
+        }
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #E5E7EB;
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            font-family: inherit;
+            outline: none;
+            transition: all 0.3s;
+        }
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            border-color: #FF5F1F;
+            box-shadow: 0 0 0 3px rgba(255, 95, 31, 0.1);
+        }
+        .submit-row {
+            text-align: center;
+            margin-top: 2rem;
+        }
+        input[type="submit"] {
+            width: 100%;
+            padding: 1rem;
+            background-color: #FF5F1F;
+            color: white;
+            border: none;
+            border-radius: 1rem;
+            font-weight: 800;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        input[type="submit"]:hover {
+            background-color: #1A1A1A;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        }
+        input[type="submit"]:active {
+            transform: scale(0.95);
+        }
+        .errornote {
+            background-color: #FEE2E2;
+            border: 1px solid #FECACA;
+            color: #991B1B;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        ul.errorlist {
+            background-color: #FEE2E2;
+            border: 1px solid #FECACA;
+            color: #991B1B;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            list-style: none;
+            font-size: 0.875rem;
+        }
+        ul.errorlist li {
+            margin-bottom: 0;
+        }
+    </style>
+{% endblock %}
+
+{% block title %}UniCart Admin Login{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex flex-col items-center justify-center px-6 py-12">
+    <div class="w-full max-w-md">
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-extrabold tracking-tighter text-uni-black mb-2">UniCart</h1>
+            <p class="text-gray-500 font-semibold">Admin Panel</p>
+        </div>
+
+        {% if form.errors and not form.non_field_errors %}
+            <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                <p class="text-red-700 font-semibold text-sm">Please correct the error below.</p>
+            </div>
+        {% endif %}
+
+        {% if form.non_field_errors %}
+            {% for error in form.non_field_errors %}
+                <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                    <p class="text-red-700 font-semibold text-sm">{{ error }}</p>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post" class="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-lg">
+            {% csrf_token %}
+            <div class="mb-6">
+                <label for="id_username" class="block text-sm font-bold text-uni-black mb-2">Username</label>
+                <input type="text" name="username" id="id_username" placeholder="Enter your username" autofocus required
+                       class="w-full px-4 py-3 border border-gray-200 rounded-xl outline-none focus:border-uni-orange focus:ring-2 focus:ring-orange-100 transition-all">
+                {% if form.username.errors %}
+                    <p class="text-red-500 text-sm mt-1">{{ form.username.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <div class="mb-8">
+                <label for="id_password" class="block text-sm font-bold text-uni-black mb-2">Password</label>
+                <input type="password" name="password" id="id_password" placeholder="Enter your password" required
+                       class="w-full px-4 py-3 border border-gray-200 rounded-xl outline-none focus:border-uni-orange focus:ring-2 focus:ring-orange-100 transition-all">
+                {% if form.password.errors %}
+                    <p class="text-red-500 text-sm mt-1">{{ form.password.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="w-full bg-uni-orange text-white py-4 rounded-2xl font-black text-lg hover:bg-uni-black transition-all duration-300 shadow-lg active:scale-95">
+                Sign In
+            </button>
+        </form>
+
+        <p class="text-center text-gray-400 text-xs font-medium mt-6">
+            UniCart © 2026. All rights reserved.
+        </p>
+    </div>
+</div>
+{% endblock %}

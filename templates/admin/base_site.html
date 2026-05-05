@@ -1,0 +1,134 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block extrastyle %}
+    {{ block.super }}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'uni-orange': '#FF5F1F',
+                        'uni-cream': '#F9F9F7',
+                        'uni-black': '#1A1A1A',
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        body { 
+            background-color: #F9F9F7;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        #header { 
+            background-color: white;
+            border-bottom: 1px solid #E5E7EB;
+            padding: 1.5rem 2rem;
+        }
+        #header h1 {
+            font-size: 1.875rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+        }
+        #header h1 a {
+            color: #1A1A1A;
+            text-decoration: none;
+        }
+        #header h1 a:hover {
+            color: #FF5F1F;
+        }
+        #header h2 {
+            display: none;
+        }
+        .module {
+            background-color: white;
+            border: 1px solid #E5E7EB;
+            border-radius: 1rem;
+            box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
+            margin-bottom: 1.5rem;
+        }
+        .module h2 {
+            background-color: #1A1A1A;
+            color: white;
+            padding: 1rem;
+            border-radius: 1rem 1rem 0 0;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+        .module table {
+            width: 100%;
+        }
+        .module td, .module th {
+            padding: 0.75rem;
+            border-bottom: 1px solid #E5E7EB;
+        }
+        .module th {
+            background-color: #F9F9F7;
+            font-weight: 600;
+        }
+        .module tr:hover {
+            background-color: #F9F9F7;
+        }
+        .button, input[type="submit"], input[type="button"] {
+            background-color: #FF5F1F;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.875rem;
+            transition: all 0.3s;
+        }
+        .button:hover, input[type="submit"]:hover, input[type="button"]:hover {
+            background-color: #1A1A1A;
+        }
+        .button.default, input[type="submit"].default {
+            background-color: #1A1A1A;
+        }
+        .button.default:hover, input[type="submit"].default:hover {
+            background-color: #FF5F1F;
+        }
+        a {
+            color: #FF5F1F;
+            text-decoration: none;
+        }
+        a:hover {
+            color: #1A1A1A;
+        }
+        #nav-sidebar {
+            background-color: white;
+            border-right: 1px solid #E5E7EB;
+        }
+        #nav-sidebar li a {
+            color: #4B5563;
+            padding: 0.5rem 1rem;
+            display: block;
+            border-left: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        #nav-sidebar li a:hover {
+            background-color: #F9F9F7;
+            border-left-color: #FF5F1F;
+            color: #FF5F1F;
+        }
+    </style>
+{% endblock %}
+
+{% block title %}UniCart Admin | {{ block.super }}{% endblock %}
+
+{% block branding %}
+    <h1 id="site-name">
+        <a href="{% url 'admin:index' %}">
+            <span style="color: #1A1A1A; font-weight: 800; font-size: 1.5rem;">UniCart</span>
+            <span style="color: #FF5F1F; font-size: 0.75rem; font-weight: 700; margin-left: 0.5rem;">Admin</span>
+        </a>
+    </h1>
+{% endblock %}

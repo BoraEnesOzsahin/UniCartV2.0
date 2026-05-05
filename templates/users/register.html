@@ -1,15 +1,143 @@
 {% extends 'base.html' %}
-{% block title %}Register — UniCart{% endblock %}
+{% block title %}Sign Up — UniCart{% endblock %}
 {% block content %}
 
-<h1>Join UniCart</h1>
+<div class="min-h-[calc(100vh-120px)] flex items-center justify-center px-6 py-12">
+    <div class="w-full max-w-md">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-extrabold tracking-tighter mb-2">Join UniCart</h1>
+            <p class="text-gray-500 font-medium">Create your account and start buying & selling</p>
+        </div>
 
-<form method="POST">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Create account</button>
-</form>
+        <!-- Register Form -->
+        <form method="POST" class="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-lg">
+            {% csrf_token %}
+            
+            {% if form.non_field_errors %}
+                {% for error in form.non_field_errors %}
+                    <div class="mb-4 p-4 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm font-medium">
+                        {{ error }}
+                    </div>
+                {% endfor %}
+            {% endif %}
 
-<p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
+            <!-- Username -->
+            <div class="mb-6">
+                <label class="block text-sm font-bold text-uni-black mb-2">{{ form.username.label }}</label>
+                {{ form.username }}
+                {% if form.username.errors %}
+                    <p class="text-red-500 text-sm mt-1">{{ form.username.errors.0 }}</p>
+                {% endif %}
+                <style>
+                    #id_username {
+                        width: 100%;
+                        padding: 0.75rem 1rem;
+                        border: 1px solid #E5E7EB;
+                        border-radius: 0.75rem;
+                        outline: none;
+                        font-size: 1rem;
+                    }
+                    #id_username:focus {
+                        border-color: #FF5F1F;
+                        box-shadow: 0 0 0 3px rgba(255, 95, 31, 0.1);
+                    }
+                </style>
+            </div>
+
+            <!-- Email -->
+            <div class="mb-6">
+                <label class="block text-sm font-bold text-uni-black mb-2">{{ form.email.label }}</label>
+                {{ form.email }}
+                <p class="text-gray-400 text-xs mt-1">{{ form.email.help_text|safe }}</p>
+                {% if form.email.errors %}
+                    <p class="text-red-500 text-sm mt-1">{{ form.email.errors.0 }}</p>
+                {% endif %}
+                <style>
+                    #id_email {
+                        width: 100%;
+                        padding: 0.75rem 1rem;
+                        border: 1px solid #E5E7EB;
+                        border-radius: 0.75rem;
+                        outline: none;
+                        font-size: 1rem;
+                    }
+                    #id_email:focus {
+                        border-color: #FF5F1F;
+                        box-shadow: 0 0 0 3px rgba(255, 95, 31, 0.1);
+                    }
+                </style>
+            </div>
+
+            <!-- Password 1 -->
+            <div class="mb-6">
+                <label class="block text-sm font-bold text-uni-black mb-2">{{ form.password1.label }}</label>
+                {{ form.password1 }}
+                {% if form.password1.help_text %}
+                    <p class="text-gray-400 text-xs mt-1">{{ form.password1.help_text|safe }}</p>
+                {% endif %}
+                {% if form.password1.errors %}
+                    <p class="text-red-500 text-sm mt-1">{{ form.password1.errors.0 }}</p>
+                {% endif %}
+                <style>
+                    #id_password1 {
+                        width: 100%;
+                        padding: 0.75rem 1rem;
+                        border: 1px solid #E5E7EB;
+                        border-radius: 0.75rem;
+                        outline: none;
+                        font-size: 1rem;
+                    }
+                    #id_password1:focus {
+                        border-color: #FF5F1F;
+                        box-shadow: 0 0 0 3px rgba(255, 95, 31, 0.1);
+                    }
+                </style>
+            </div>
+
+            <!-- Password 2 -->
+            <div class="mb-6">
+                <label class="block text-sm font-bold text-uni-black mb-2">{{ form.password2.label }}</label>
+                {{ form.password2 }}
+                {% if form.password2.help_text %}
+                    <p class="text-gray-400 text-xs mt-1">{{ form.password2.help_text|safe }}</p>
+                {% endif %}
+                {% if form.password2.errors %}
+                    <p class="text-red-500 text-sm mt-1">{{ form.password2.errors.0 }}</p>
+                {% endif %}
+                <style>
+                    #id_password2 {
+                        width: 100%;
+                        padding: 0.75rem 1rem;
+                        border: 1px solid #E5E7EB;
+                        border-radius: 0.75rem;
+                        outline: none;
+                        font-size: 1rem;
+                    }
+                    #id_password2:focus {
+                        border-color: #FF5F1F;
+                        box-shadow: 0 0 0 3px rgba(255, 95, 31, 0.1);
+                    }
+                </style>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="w-full bg-uni-orange text-white py-4 rounded-2xl font-black text-lg hover:bg-uni-black transition-all duration-300 shadow-lg active:scale-95 mb-4">
+                Create Account
+            </button>
+
+            <!-- Login Link -->
+            <p class="text-center text-gray-600 font-medium">
+                Already have an account? 
+                <a href="{% url 'login' %}" class="text-uni-orange font-bold hover:underline">Sign in</a>
+            </p>
+        </form>
+
+        <!-- Footer -->
+        <p class="text-center text-gray-400 text-xs font-medium mt-6">
+            By creating an account, you agree to our Terms of Service
+        </p>
+    </div>
+</div>
 
 {% endblock %}
