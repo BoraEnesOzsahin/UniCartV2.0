@@ -3,49 +3,23 @@
 {% block title %}Email Verification Sent{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-body text-center">
-                    <h2 class="card-title mb-4">Check Your Email</h2>
-                    
-                    <div class="alert alert-info" role="alert">
-                        <p>A verification email has been sent to your email address.</p>
-                        <p>Please click the link in the email to verify your account.</p>
-                    </div>
+<section class="max-w-2xl mx-auto px-6 py-12">
+  <div class="bg-white border border-gray-100 rounded-[2rem] p-8 text-center">
+    <div class="text-5xl mb-4">📬</div>
+    <h2 class="text-3xl font-black mb-4">Check your email</h2>
 
-                    <div class="mb-4">
-                        <i class="fas fa-envelope" style="font-size: 3rem; color: #007bff;"></i>
-                    </div>
-
-                    <p class="text-muted">
-                        The verification link will expire in 24 hours.
-                    </p>
-
-                    <hr class="my-4">
-
-                    <p class="mb-3">
-                        <strong>Didn't receive the email?</strong>
-                    </p>
-                    <ul class="list-unstyled">
-                        <li class="mb-2">Check your spam or junk folder</li>
-                        <li class="mb-2">Make sure you entered the correct email address</li>
-                    </ul>
-
-                    <a href="{% url 'home' %}" class="btn btn-primary mt-4">
-                        Back to Home
-                    </a>
-                </div>
-            </div>
-        </div>
+    <div class="alert alert-info text-left">
+      <p>A verification email has been sent to your email address.</p>
+      <p>Please click the link in that email to verify your account.</p>
     </div>
-</div>
 
-<style>
-    .card {
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        border: none;
-    }
-</style>
+    <p class="text-gray-500 mb-4">The verification link will expire in 24 hours.</p>
+    <p class="font-bold mb-2">Didn't receive the email?</p>
+    <ul class="text-gray-600 text-sm mb-6 space-y-1">
+      <li>Check your spam or junk folder</li>
+      <li>Make sure you entered the correct email address</li>
+    </ul>
+    <a href="{% url 'home' %}" class="btn btn-primary">Back to Home</a>
+  </div>
+</section>
 {% endblock %}

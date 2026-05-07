@@ -7,6 +7,7 @@ from django.conf import settings
 from django.urls import reverse
 from .forms import RegisterForm, ProfileUpdateForm
 from .models import UserProfile
+from listings.models import Favorite
 
 
 # ─────────────────────────────────────────
@@ -166,9 +167,16 @@ def profile(request, username):
     from django.contrib.auth.models import User
     user     = User.objects.get(username=username)  # TODO: handle 404
     listings = user.listings.filter(is_active=True, is_sold=False)
+    favorited_listing_ids = set()
+    if request.user.is_authenticated:
+        favorited_listing_ids = set(
+            Favorite.objects.filter(user=request.user, listing__in=listings)
+            .values_list('listing_id', flat=True)
+        )
     return render(request, 'users/profile.html', {
         'profile_user': user,
         'listings':     listings,
+        'favorited_listing_ids': favorited_listing_ids,
     })
 
 
@@ -181,7 +189,11 @@ def profile(request, username):
 def dashboard(request):
     my_listings = request.user.listings.all()
     my_favorites = request.user.favorites.select_related('listing').all()
+    favorited_listing_ids = set(
+        request.user.favorites.values_list('listing_id', flat=True)
+    )
     return render(request, 'users/dashboard.html', {
         'my_listings':  my_listings,
         'my_favorites': my_favorites,
+        'favorited_listing_ids': favorited_listing_ids,
     })

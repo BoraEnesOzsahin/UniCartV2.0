@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.paginator import Paginator
-from .models import Listing, Category
+from .models import Listing, Category, Favorite
 from .forms import ListingForm
 
 
@@ -14,9 +14,16 @@ from .forms import ListingForm
 def home(request):
     listings   = Listing.objects.filter(is_active=True, is_sold=False)[:6]
     categories = Category.objects.all()
+    favorited_listing_ids = set()
+    if request.user.is_authenticated:
+        favorited_listing_ids = set(
+            Favorite.objects.filter(user=request.user, listing__in=listings)
+            .values_list('listing_id', flat=True)
+        )
     return render(request, 'home.html', {
         'listings':   listings,
         'categories': categories,
+        'favorited_listing_ids': favorited_listing_ids,
     })
 
 
@@ -44,10 +51,47 @@ def listing_list(request):
     listings  = paginator.get_page(page)
 
     categories = Category.objects.all()
+    favorited_listing_ids = set()
+    if request.user.is_authenticated:
+        current_listing_ids = [listing.id for listing in listings]
+        favorited_listing_ids = set(
+            Favorite.objects.filter(user=request.user, listing_id__in=current_listing_ids)
+            .values_list('listing_id', flat=True)
+        )
+
     return render(request, 'listings/list.html', {
         'listings':   listings,
         'categories': categories,
         'query':      query,
+        'selected_category_slug': category_slug,
+        'favorited_listing_ids': favorited_listing_ids,
+    })
+
+
+def category_listings(request, slug):
+    category = get_object_or_404(Category, slug=slug)
+    listings = Listing.objects.filter(
+        is_active=True,
+        is_sold=False,
+        category=category,
+    )
+
+    paginator = Paginator(listings, 8)
+    page = request.GET.get('page')
+    listings = paginator.get_page(page)
+
+    favorited_listing_ids = set()
+    if request.user.is_authenticated:
+        current_listing_ids = [listing.id for listing in listings]
+        favorited_listing_ids = set(
+            Favorite.objects.filter(user=request.user, listing_id__in=current_listing_ids)
+            .values_list('listing_id', flat=True)
+        )
+
+    return render(request, 'listings/category.html', {
+        'category': category,
+        'listings': listings,
+        'favorited_listing_ids': favorited_listing_ids,
     })
 
 
@@ -58,7 +102,49 @@ def listing_list(request):
 # ─────────────────────────────────────────
 def listing_detail(request, pk):
     listing = get_object_or_404(Listing, pk=pk, is_active=True)
-    return render(request, 'listings/detail.html', {'listing': listing})
+    is_favorited = False
+    if request.user.is_authenticated:
+        is_favorited = Favorite.objects.filter(user=request.user, listing=listing).exists()
+    return render(request, 'listings/detail.html', {
+        'listing': listing,
+        'is_favorited': is_favorited,
+    })
+
+
+@login_required
+def toggle_favorite(request, pk):
+    if request.method != 'POST':
+        return redirect('listing_detail', pk=pk)
+
+    listing = get_object_or_404(Listing, pk=pk, is_active=True, is_sold=False)
+    favorite, created = Favorite.objects.get_or_create(user=request.user, listing=listing)
+
+    if not created:
+        favorite.delete()
+        messages.info(request, 'Removed from favorites.')
+    else:
+        messages.success(request, 'Added to favorites.')
+
+    next_url = request.POST.get('next')
+    if next_url:
+        return redirect(next_url)
+    return redirect('listing_detail', pk=pk)
+
+
+@login_required
+def favorite_list(request):
+    favorites = (
+        Favorite.objects
+        .filter(user=request.user, listing__is_active=True)
+        .select_related('listing', 'listing__category', 'listing__seller')
+        .order_by('-saved_at')
+    )
+    listings = [favorite.listing for favorite in favorites]
+    favorited_listing_ids = {listing.id for listing in listings}
+    return render(request, 'listings/favorites.html', {
+        'listings': listings,
+        'favorited_listing_ids': favorited_listing_ids,
+    })
 
 
 # ─────────────────────────────────────────

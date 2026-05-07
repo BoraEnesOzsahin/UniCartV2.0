@@ -8,29 +8,33 @@
        - my_favorites → current user's saved items
 ──────────────────────────────────────────── -->
 
-<h1>Welcome, {{ user.username }}</h1>
+<section class="max-w-7xl mx-auto px-6 py-10">
+  <h1 class="text-3xl font-black mb-8">Welcome, {{ user.username }}</h1>
 
-<section>
-  <h2>My listings</h2>
-  <a href="{% url 'listing_create' %}">+ Post new item</a>
-  <div class="listing-grid">
-    {% for listing in my_listings %}
-      {% include 'partials/listing_card.html' with listing=listing %}
-    {% empty %}
-      <p>You haven't posted anything yet.</p>
-    {% endfor %}
-  </div>
-</section>
+  <section class="mb-10">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-2xl font-extrabold">My listings</h2>
+      <a href="{% url 'listing_create' %}" class="btn btn-primary">+ Post new item</a>
+    </div>
+    <div class="listing-grid">
+      {% for listing in my_listings %}
+        {% include 'partials/listing_card.html' with listing=listing %}
+      {% empty %}
+        <div class="bg-white border border-gray-100 rounded-2xl p-6 text-gray-500">You haven't posted anything yet.</div>
+      {% endfor %}
+    </div>
+  </section>
 
-<section>
-  <h2>My favorites</h2>
-  <div class="listing-grid">
-    {% for fav in my_favorites %}
-      {% include 'partials/listing_card.html' with listing=fav.listing %}
-    {% empty %}
-      <p>No saved items yet.</p>
-    {% endfor %}
-  </div>
+  <section>
+    <h2 class="text-2xl font-extrabold mb-4">My favorites</h2>
+    <div class="listing-grid">
+      {% for fav in my_favorites %}
+        {% include 'partials/listing_card.html' with listing=fav.listing %}
+      {% empty %}
+        <div class="bg-white border border-gray-100 rounded-2xl p-6 text-gray-500">No saved items yet.</div>
+      {% endfor %}
+    </div>
+  </section>
 </section>
 
 {% endblock %}

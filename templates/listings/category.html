@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %}{{ category.name }} — UniCart{% endblock %}
+{% block content %}
+
+<section class="max-w-7xl mx-auto px-6 py-10">
+  <div class="bg-white border border-gray-100 rounded-[2rem] p-6 md:p-8 mb-8">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div class="flex items-center gap-4">
+        <div class="w-14 h-14 rounded-2xl bg-orange-50 flex items-center justify-center text-3xl">
+          {{ category.icon|default:"📦" }}
+        </div>
+        <div>
+          <p class="text-xs uppercase tracking-widest font-bold text-gray-500">Category</p>
+          <h1 class="text-3xl font-black">{{ category.name }}</h1>
+        </div>
+      </div>
+      <a href="{% url 'listing_list' %}?category={{ category.slug }}" class="btn btn-primary">
+        View in Browse Filters
+      </a>
+    </div>
+  </div>
+
+  <div class="listing-grid">
+    {% for listing in listings %}
+      {% include 'partials/listing_card.html' with listing=listing %}
+    {% empty %}
+      <div class="bg-white border border-gray-100 rounded-2xl p-6 text-gray-500">
+        No listings found in this category yet.
+      </div>
+    {% endfor %}
+  </div>
+
+  <div class="pagination mt-6">
+    {% if listings.has_previous %}
+      <a href="?page={{ listings.previous_page_number }}">← Prev</a>
+    {% else %}
+      <span class="text-gray-400">← Prev</span>
+    {% endif %}
+
+    <span>Page {{ listings.number }} of {{ listings.paginator.num_pages }}</span>
+
+    {% if listings.has_next %}
+      <a href="?page={{ listings.next_page_number }}">Next →</a>
+    {% else %}
+      <span class="text-gray-400">Next →</span>
+    {% endif %}
+  </div>
+</section>
+
+{% endblock %}

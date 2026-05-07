@@ -2,13 +2,24 @@
 {% block title %}Edit {{ listing.title }} — UniCart{% endblock %}
 {% block content %}
 
-<h1>Edit listing</h1>
-
-<form method="POST" enctype="multipart/form-data">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Save changes</button>
-  <a href="{% url 'listing_detail' listing.pk %}">Cancel</a>
-</form>
+<section class="max-w-3xl mx-auto px-6 py-10">
+  <h1 class="text-3xl font-black mb-6">Edit listing</h1>
+  <form method="POST" enctype="multipart/form-data" class="bg-white border border-gray-100 rounded-[2rem] p-8 space-y-5">
+    {% csrf_token %}
+    {% for field in form %}
+      <div class="form-group">
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}
+          <p class="text-red-600 text-sm mt-1">{{ field.errors.0 }}</p>
+        {% endif %}
+      </div>
+    {% endfor %}
+    <div class="flex items-center gap-3">
+      <button type="submit" class="btn btn-primary">Save changes</button>
+      <a href="{% url 'listing_detail' listing.pk %}" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</section>
 
 {% endblock %}

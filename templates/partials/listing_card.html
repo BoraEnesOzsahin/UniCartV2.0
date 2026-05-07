@@ -2,25 +2,41 @@
      Reusable card for a single listing.
      Use with: {% include 'partials/listing_card.html' with listing=listing %}
 ──────────────────────────────────────────── -->
-<a href="{% url 'listing_detail' listing.pk %}" class="listing-card">
-  <div class="listing-img">
-    {% if listing.image %}
-      <img src="{{ listing.image.url }}" alt="{{ listing.title }}" loading="lazy">
-    {% else %}
-      <span>📦</span>
-    {% endif %}
-    <span class="listing-condition cond-{{ listing.condition }}">
-      {{ listing.get_condition_display }}
-    </span>
-  </div>
-  <div class="listing-body">
-    <div class="listing-title">{{ listing.title }}</div>
-    <div class="listing-meta">{{ listing.category }} · {{ listing.created_at|timesince }} ago</div>
-    <div class="listing-footer">
-      <div>
-        <div class="listing-price">₺{{ listing.price }}</div>
-        <div class="listing-seller">{{ listing.seller.username }}</div>
+<div class="listing-card-wrap">
+  <a href="{% url 'listing_detail' listing.pk %}" class="listing-card">
+    <div class="listing-img">
+      {% if listing.image %}
+        <img src="{{ listing.image.url }}" alt="{{ listing.title }}" loading="lazy">
+      {% else %}
+        <span>📦</span>
+      {% endif %}
+      <span class="listing-condition cond-{{ listing.condition }}">
+        {{ listing.get_condition_display }}
+      </span>
+    </div>
+    <div class="listing-body">
+      <div class="listing-title">{{ listing.title }}</div>
+      <div class="listing-meta">{{ listing.category }} · {{ listing.created_at|timesince }} ago</div>
+      <div class="listing-footer">
+        <div>
+          <div class="listing-price">₺{{ listing.price }}</div>
+          <div class="listing-seller">{{ listing.seller.username }}</div>
+        </div>
       </div>
     </div>
-  </div>
-</a>
+  </a>
+
+  {% if user.is_authenticated %}
+    <form method="post" action="{% url 'toggle_favorite' listing.pk %}" class="mt-2">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ request.get_full_path }}">
+      <button type="submit">
+        {% if listing.id in favorited_listing_ids %}
+          💔 Remove from favorites
+        {% else %}
+          ❤️ Add to favorites
+        {% endif %}
+      </button>
+    </form>
+  {% endif %}
+</div>

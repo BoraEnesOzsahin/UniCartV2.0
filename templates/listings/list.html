@@ -9,38 +9,73 @@
        - query      → current search term
 ──────────────────────────────────────────── -->
 
-<!-- Search bar -->
-<form method="GET" action="{% url 'listing_list' %}">
-  <input type="text" name="q" value="{{ query|default:'' }}" placeholder="Search listings...">
-  <select name="category">
-    <option value="">All categories</option>
-    {% for cat in categories %}
-      <option value="{{ cat.slug }}">{{ cat.name }}</option>
+<section class="max-w-7xl mx-auto px-6 py-10">
+  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+    <h1 class="text-3xl font-black">Browse Listings</h1>
+    {% if user.is_authenticated %}
+      <a href="{% url 'listing_create' %}" class="btn btn-primary">+ Post new listing</a>
+    {% endif %}
+  </div>
+
+  <form method="GET" action="{% url 'listing_list' %}" class="search-form">
+    <div class="filter-grid">
+      <input type="text" name="q" value="{{ query|default:'' }}" placeholder="Search listings...">
+      <select name="category">
+        <option value="">All categories</option>
+        {% for cat in categories %}
+          <option value="{{ cat.slug }}" {% if selected_category_slug == cat.slug %}selected{% endif %}>
+            {{ cat.icon }} {{ cat.name }}
+          </option>
+        {% endfor %}
+      </select>
+      <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+  </form>
+
+  <div class="mb-8">
+    <div class="flex items-center justify-between mb-3">
+      <h2 class="text-xl font-extrabold">Shop by Category</h2>
+      {% if selected_category_slug %}
+        <a href="{% url 'listing_list' %}{% if query %}?q={{ query }}{% endif %}" class="text-sm font-bold text-uni-orange hover:underline">Clear category</a>
+      {% endif %}
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {% for cat in categories %}
+        <a href="{% url 'category_listings' cat.slug %}"
+           class="bg-white border {% if selected_category_slug == cat.slug %}border-uni-orange ring-2 ring-orange-100{% else %}border-gray-100{% endif %} rounded-2xl p-5 flex items-start gap-4 hover:-translate-y-1 hover:shadow-lg transition-all">
+          <div class="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center text-2xl">{{ cat.icon|default:"📦" }}</div>
+          <div>
+            <h3 class="font-extrabold leading-tight">{{ cat.name }}</h3>
+            <p class="text-sm text-gray-500 mt-1">Browse items in this category</p>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="listing-grid">
+    {% for listing in listings %}
+      {% include 'partials/listing_card.html' with listing=listing %}
+    {% empty %}
+      <div class="bg-white border border-gray-100 rounded-2xl p-6 text-gray-500">No listings found.</div>
     {% endfor %}
-  </select>
-  <button type="submit">Search</button>
-</form>
+  </div>
 
-<!-- Results -->
-<div class="listing-grid">
-  {% for listing in listings %}
-    {% include 'partials/listing_card.html' with listing=listing %}
-  {% empty %}
-    <p>No listings found.</p>
-  {% endfor %}
-</div>
+  <div class="pagination">
+    {% if listings.has_previous %}
+      <a href="?page={{ listings.previous_page_number }}&q={{ query }}{% if selected_category_slug %}&category={{ selected_category_slug }}{% endif %}">← Prev</a>
+    {% else %}
+      <span class="text-gray-400">← Prev</span>
+    {% endif %}
 
-<!-- Pagination -->
-<div class="pagination">
-  {% if listings.has_previous %}
-    <a href="?page={{ listings.previous_page_number }}&q={{ query }}">← Prev</a>
-  {% endif %}
+    <span>Page {{ listings.number }} of {{ listings.paginator.num_pages }}</span>
 
-  <span>Page {{ listings.number }} of {{ listings.paginator.num_pages }}</span>
-
-  {% if listings.has_next %}
-    <a href="?page={{ listings.next_page_number }}&q={{ query }}">Next →</a>
-  {% endif %}
-</div>
+    {% if listings.has_next %}
+      <a href="?page={{ listings.next_page_number }}&q={{ query }}{% if selected_category_slug %}&category={{ selected_category_slug }}{% endif %}">Next →</a>
+    {% else %}
+      <span class="text-gray-400">Next →</span>
+    {% endif %}
+  </div>
+</section>
 
 {% endblock %}

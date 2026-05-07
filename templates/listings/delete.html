@@ -2,13 +2,17 @@
 {% block title %}Delete Listing — UniCart{% endblock %}
 {% block content %}
 
-<h1>Delete "{{ listing.title }}"?</h1>
-<p>This cannot be undone.</p>
+<section class="max-w-xl mx-auto px-6 py-12">
+  <div class="bg-white border border-red-100 rounded-[2rem] p-8">
+    <h1 class="text-2xl font-black mb-3">Delete "{{ listing.title }}"?</h1>
+    <p class="text-gray-600 mb-6">This action is permanent and cannot be undone.</p>
 
-<form method="POST">
-  {% csrf_token %}
-  <button type="submit">Yes, delete it</button>
-  <a href="{% url 'listing_detail' listing.pk %}">Cancel</a>
-</form>
+    <form method="POST" class="flex items-center gap-3">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger">Yes, delete it</button>
+      <a href="{% url 'listing_detail' listing.pk %}" class="btn btn-secondary">Cancel</a>
+    </form>
+  </div>
+</section>
 
 {% endblock %}
