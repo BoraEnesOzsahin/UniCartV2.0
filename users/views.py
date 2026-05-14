@@ -70,6 +70,35 @@ def register(request):
     return render(request, 'users/register.html', {'form': form})
 
 
+def resend_verification(request):
+    message_sent = False
+    if request.method == 'POST':
+        identifier = request.POST.get('identifier', '').strip()
+        if identifier:
+            from django.contrib.auth.models import User
+            try:
+                if '@' in identifier:
+                    user = User.objects.get(email__iexact=identifier)
+                else:
+                    user = User.objects.get(username__iexact=identifier)
+                profile, _ = UserProfile.objects.get_or_create(user=user)
+                profile.email_verified = False
+                profile.save()
+                _send_verification_email(request, user)
+                messages.success(request, 'Verification email resent. Check your inbox.')
+                message_sent = True
+            except Exception:
+                # Do not expose whether the account exists
+                messages.info(request, 'If an account exists, a verification email has been sent.')
+                message_sent = True
+        else:
+            messages.error(request, 'Please enter your username or email.')
+
+    return render(request, 'users/resend_verification.html', {
+        'message_sent': message_sent,
+    })
+
+
 # ─────────────────────────────────────────
 #  LOGIN
 #  URL: /users/login/
@@ -88,8 +117,8 @@ def user_login(request):
             try:
                 profile = user.userprofile
                 if not profile.email_verified:
-                    messages.error(request, 'Please verify your email before logging in.')
-                    return redirect('login')
+                    messages.error(request, 'Please verify your email before logging in. You can resend a verification link.')
+                    return redirect('resend_verification')
             except UserProfile.DoesNotExist:
                 profile = UserProfile.objects.create(user=user)
                 try:
@@ -97,7 +126,7 @@ def user_login(request):
                     messages.error(request, 'Your account is not verified. A verification email has been sent.')
                 except Exception as e:
                     messages.error(request, f'Error sending verification email: {str(e)}')
-                return redirect('login')
+                return redirect('resend_verification')
 
             login(request, user)
             return redirect(request.GET.get('next', 'home'))   # go to intended page or home

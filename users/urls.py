@@ -13,5 +13,6 @@ urlpatterns = [
     path('verify-sent/',                    views.email_verification_sent,  name='email-verification-sent'),  # /users/verify-sent/
     path('verify/<str:token>/',             views.verify_email,             name='verify-email'),          # /users/verify/<token>/
     path('verify-success/',                 views.email_verification_success, name='email-verification-success'),  # /users/verify-success/
+    path('resend-verification/',            views.resend_verification,      name='resend_verification'),   # /users/resend-verification/
     path('<str:username>/',                 views.profile,                  name='profile'),               # /users/enes/
 ]
