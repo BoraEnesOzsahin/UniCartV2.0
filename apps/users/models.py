@@ -1,10 +1,21 @@
+import uuid
 from django.db import models
 from django.contrib.auth.models import User
-import uuid
 
+class University(models.Model):
+    name = models.CharField(max_length=200)
+    location = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = "Universities"
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='userprofile')
+    university = models.ForeignKey(University, on_delete=models.SET_NULL, null=True, blank=True)
+    is_seller = models.BooleanField(default=False)
     email_verified = models.BooleanField(default=False)
     email_token = models.CharField(max_length=255, blank=True, null=True, unique=True)
     token_created_at = models.DateTimeField(blank=True, null=True)

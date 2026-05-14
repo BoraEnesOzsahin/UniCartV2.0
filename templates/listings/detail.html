@@ -28,6 +28,19 @@
           <p>Sold by: <a href="{% url 'profile' listing.seller.username %}" class="font-bold text-uni-orange">{{ listing.seller.username }}</a></p>
           <p>Posted: {{ listing.created_at|date:"d M Y" }}</p>
         </div>
+
+        {% if user.is_authenticated and user != listing.seller %}
+          <form method="post" action="{% url 'chat_start' listing.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary w-full md:w-auto">
+              ✉️ Message Seller
+            </button>
+          </form>
+        {% elif not user.is_authenticated %}
+          <a href="{% url 'login' %}?next={{ request.get_full_path }}" class="btn btn-primary w-full md:w-auto">
+            ✉️ Login to Message
+          </a>
+        {% endif %}
       </div>
     </div>
   </div>

@@ -1,9 +1,8 @@
 from django.apps import AppConfig
 
-
-class MarketplaceConfig(AppConfig):
+class UsersConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'marketplace'
+    name = 'users'
 
     def ready(self):
-        import marketplace.signals
+        import users.signals

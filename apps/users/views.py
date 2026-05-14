@@ -242,7 +242,8 @@ def dashboard(request):
 # ─────────────────────────────────────────
 @login_required
 def account_settings(request):
-    profile_form = ProfileUpdateForm(instance=request.user)
+    profile, _ = UserProfile.objects.get_or_create(user=request.user)
+    profile_form = ProfileUpdateForm(instance=profile, user=request.user)
     password_form = PasswordChangeForm(user=request.user)
 
     password_input_class = (
@@ -256,11 +257,11 @@ def account_settings(request):
     if request.method == 'POST':
         if 'save_profile' in request.POST:
             old_email = request.user.email
-            profile_form = ProfileUpdateForm(request.POST, instance=request.user)
+            profile_form = ProfileUpdateForm(request.POST, instance=profile, user=request.user)
             if profile_form.is_valid():
-                user = profile_form.save()
+                profile = profile_form.save()
+                user = profile.user
                 if user.email != old_email:
-                    profile, _ = UserProfile.objects.get_or_create(user=user)
                     profile.email_verified = False
                     profile.save()
                     try:

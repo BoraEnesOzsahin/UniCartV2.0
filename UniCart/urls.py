@@ -20,8 +20,14 @@ urlpatterns = [
     # Listings app  →  goes to listings/urls.py
     path('listings/',   include('listings.urls')),
 
+    # Core app (support, faq)
+    path('',            include('core.urls')),
+
     # Users app  →  goes to users/urls.py
     path('users/',      include('users.urls')),
+
+    # Chats app
+    path('chats/',      include('chats.urls')),
 ]
 
 # Serve uploaded media files in development

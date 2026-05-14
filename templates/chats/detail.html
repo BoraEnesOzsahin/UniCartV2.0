@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Chat — {{ conversation.listing.title }}{% endblock %}
+
+{% block content %}
+<section class="max-w-5xl mx-auto px-6 py-10" data-chat-root
+         data-conversation-id="{{ conversation.id }}"
+         data-current-user-id="{{ request.user.id }}">
+
+  <div class="bg-white border border-gray-100 rounded-[2rem] overflow-hidden">
+    <div class="p-5 md:p-6 border-b border-gray-100 flex items-start justify-between gap-4">
+      <div class="min-w-0">
+        <h1 class="text-xl md:text-2xl font-black truncate">{{ conversation.listing.title }}</h1>
+        <p class="text-sm text-gray-600">Chat is only between buyer and seller.</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <form method="post" action="{% url 'chat_hide' conversation.id %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-secondary">Hide</button>
+        </form>
+        <a href="{% url 'chat_report' conversation.id %}" class="btn btn-secondary">Report</a>
+      </div>
+    </div>
+
+    {% if conversation.is_blocked %}
+      <div class="px-5 md:px-6 py-3 bg-yellow-50 border-b border-yellow-200 text-sm text-yellow-900">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+          <div>
+            <span class="font-bold">Conversation blocked.</span>
+            {% if conversation.block_reason %}Reason: {{ conversation.block_reason }}{% endif %}
+          </div>
+          {% if conversation.blocked_by_id == request.user.id %}
+            <form method="post" action="{% url 'chat_unblock' conversation.id %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-secondary">Unblock</button>
+            </form>
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+
+    <div id="chat-messages" class="p-5 md:p-6 space-y-3 h-[55vh] overflow-y-auto bg-uni-cream">
+      {% for m in messages %}
+        <div class="flex {% if m.sender_id == request.user.id %}justify-end{% else %}justify-start{% endif %}">
+          <div class="max-w-[85%] md:max-w-[70%] rounded-2xl px-4 py-3 border {% if m.sender_id == request.user.id %}bg-white border-orange-100{% else %}bg-white border-gray-100{% endif %}">
+            {% if m.image %}
+              <img src="{{ m.image.url }}" alt="Shared image" class="rounded-xl max-h-72 w-auto mb-2">
+            {% endif %}
+            {% if m.text %}
+              <p class="text-sm text-gray-800 whitespace-pre-wrap break-words">{{ m.text }}</p>
+            {% endif %}
+            <div class="mt-1 flex items-center justify-end gap-2 text-[11px] text-gray-500">
+              <span>{{ m.created_at|date:"H:i" }}</span>
+              {% if m.sender_id == request.user.id %}
+                <span class="chat-status" data-message-id="{{ m.id }}">{{ m.delivery_state|default:"Delivered" }}</span>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <div class="p-5 md:p-6 border-t border-gray-100">
+      <div id="chat-warning" class="hidden mb-3 rounded-xl border border-yellow-200 bg-yellow-50 px-4 py-3 text-sm text-yellow-900"></div>
+
+      <form id="chat-form" class="flex flex-col md:flex-row gap-3" autocomplete="off">
+        <input id="chat-input" type="text" maxlength="1000" placeholder="Write a message…"
+               class="w-full border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-uni-orange focus:ring-2 focus:ring-orange-100 transition-all" />
+        <button id="chat-send" type="submit" class="btn btn-primary">Send</button>
+      </form>
+
+      <form id="chat-image-form" class="mt-3 flex flex-col md:flex-row gap-3" method="post" enctype="multipart/form-data"
+            action="{% url 'chat_upload_image' conversation.id %}">
+        {% csrf_token %}
+        <input type="file" name="image" accept="image/png,image/jpeg,image/webp" class="w-full border border-gray-200 rounded-xl px-4 py-3" />
+        <button type="submit" class="btn btn-secondary">Send image</button>
+      </form>
+
+      {% if not conversation.is_blocked %}
+        <form method="post" action="{% url 'chat_block' conversation.id %}" class="mt-4">
+          {% csrf_token %}
+          <input type="hidden" name="reason" value="User blocked conversation">
+          <button type="submit" class="btn btn-danger">Block conversation</button>
+        </form>
+      {% endif %}
+    </div>
+  </div>
+
+</section>
+
+<script src="{% static 'js/chat.js' %}"></script>
+{% endblock %}

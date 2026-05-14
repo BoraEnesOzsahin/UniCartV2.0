@@ -1,5 +1,6 @@
 from pathlib import Path
 import os
+import dj_database_url
 try:
     from dotenv import load_dotenv
 except ModuleNotFoundError:
@@ -10,6 +11,10 @@ except ModuleNotFoundError:
 # ─────────────────────────────────────────
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Add 'apps' to sys.path
+import sys
+sys.path.append(str(BASE_DIR / 'apps'))
 
 # Load environment variables from .env file
 if load_dotenv:
@@ -38,6 +43,7 @@ if vercel_url and vercel_url not in ALLOWED_HOSTS:
 
 # ── Apps ──────────────────────────────────
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -46,10 +52,20 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # Your apps ↓ (add them here after running startapp)
+    'core',
     'listings',
     'users',
-    'marketplace',
+    'chats',
+    'channels',
 ]
+
+ASGI_APPLICATION = 'UniCart.asgi.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    },
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -77,18 +93,40 @@ TEMPLATES = [{
             'django.contrib.auth.context_processors.auth',
             'django.contrib.messages.context_processors.messages',
             'users.context_processors.email_verification_status',
+            'chats.context_processors.unread_chat_count',
         ],
     },
 }]
 
 
 # ── Database ──────────────────────────────
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',   # local file-based DB, fine for development
+# We prioritize individual DB_* variables for reliability (Supabase).
+# We then check DATABASE_URL.
+# Finally, we fall back to local SQLite.
+
+db_name = os.getenv('DB_NAME')
+if db_name:
+    # Use individual variables (Safe for passwords with special chars)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': db_name,
+            'USER': os.getenv('DB_USER', 'postgres'),
+            'PASSWORD': os.getenv('DB_PASSWORD', ''),
+            'HOST': os.getenv('DB_HOST', 'localhost'),
+            'PORT': os.getenv('DB_PORT', '5432'),
+            'CONN_MAX_AGE': 600,
+        }
     }
-}
+else:
+    # Use DATABASE_URL or SQLite
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=f'sqlite:///{BASE_DIR / "db.sqlite3"}',
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
+    }
 
 
 # ── Static files (CSS, JS, images) ────────

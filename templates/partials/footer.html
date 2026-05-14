@@ -6,7 +6,8 @@
       {% if user.is_authenticated %}
         <a href="{% url 'favorite_list' %}" class="hover:text-uni-orange transition-colors">Favorites</a>
       {% endif %}
-      <a href="{% url 'home' %}#how-it-works" class="hover:text-uni-orange transition-colors">How it works</a>
+      <a href="{% url 'support' %}" class="hover:text-uni-orange transition-colors">Support</a>
+      <a href="{% url 'faq' %}" class="hover:text-uni-orange transition-colors">FAQ</a>
     </div>
   </div>
 </footer>

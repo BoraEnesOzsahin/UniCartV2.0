@@ -64,6 +64,22 @@
           {% endif %}
         </div>
 
+        <div class="mb-6">
+          <label class="block text-sm font-bold text-uni-black mb-2">University</label>
+          {{ profile_form.university }}
+          {% if profile_form.university.errors %}
+            <p class="text-red-500 text-sm mt-1">{{ profile_form.university.errors.0 }}</p>
+          {% endif %}
+        </div>
+
+        <div class="mb-6 flex items-center gap-3">
+          {{ profile_form.is_seller }}
+          <label class="text-sm font-bold text-uni-black">Register as Seller</label>
+          {% if profile_form.is_seller.errors %}
+            <p class="text-red-500 text-sm mt-1">{{ profile_form.is_seller.errors.0 }}</p>
+          {% endif %}
+        </div>
+
         <button name="save_profile" type="submit" class="w-full bg-uni-orange text-white py-4 rounded-2xl font-black text-lg hover:bg-uni-black transition-all duration-300 shadow-lg active:scale-95">
           Save changes
         </button>

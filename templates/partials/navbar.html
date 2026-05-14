@@ -27,6 +27,12 @@
                     <a href="{% url 'dashboard' %}" class="block px-4 py-3 text-sm font-bold text-gray-600 hover:text-uni-orange hover:bg-orange-50 rounded-xl transition-colors">
                         Dashboard
                     </a>
+                    <a href="{% url 'chat_inbox' %}" class="flex items-center justify-between px-4 py-3 text-sm font-bold text-gray-600 hover:text-uni-orange hover:bg-orange-50 rounded-xl transition-colors">
+                        <span>Messages</span>
+                        {% if unread_chat_count %}
+                            <span class="bg-uni-orange text-white text-[10px] px-2 py-0.5 rounded-full font-black">{{ unread_chat_count }}</span>
+                        {% endif %}
+                    </a>
                     <a href="{% url 'favorite_list' %}" class="block px-4 py-3 text-sm font-bold text-gray-600 hover:text-uni-orange hover:bg-orange-50 rounded-xl transition-colors">
                         Favorites
                     </a>

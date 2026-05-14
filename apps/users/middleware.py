@@ -17,7 +17,7 @@ class RequireEmailVerificationMiddleware:
         return self.get_response(request)
 
     def process_request(self, request):
-        if not request.user.is_authenticated:
+        if not request.user.is_authenticated or request.user.is_superuser:
             return None
 
         path = request.path

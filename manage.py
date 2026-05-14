@@ -5,6 +5,12 @@ import sys
 
 def main():
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'UniCart.settings')
+    
+    # Add 'apps' folder to sys.path
+    import sys
+    from pathlib import Path
+    sys.path.append(str(Path(__file__).resolve().parent / 'apps'))
+
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
