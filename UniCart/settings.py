@@ -44,6 +44,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'users.middleware.RequireEmailVerificationMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
@@ -91,8 +92,8 @@ LOGOUT_REDIRECT_URL = '/'
 
 # ── Email Configuration ───────────────────
 # Development: Console backend (prints emails to terminal)
-# Production: Switch to Outlook SMTP with app password
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'noreply@unicart.local')
 
 # Outlook SMTP Config (for production):
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

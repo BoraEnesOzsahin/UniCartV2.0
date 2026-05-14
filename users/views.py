@@ -12,6 +12,34 @@ from .models import UserProfile
 from listings.models import Favorite
 
 
+def _send_verification_email(request, user):
+    profile, _ = UserProfile.objects.get_or_create(user=user)
+    email_token = profile.generate_email_token()
+    verification_url = request.build_absolute_uri(
+        reverse('verify-email', args=[email_token])
+    )
+    subject = 'Verify your UniCart email'
+    message = f"""
+Hi {user.username},
+
+Welcome to UniCart! Please verify your email by clicking the link below:
+
+{verification_url}
+
+This link will expire in 24 hours.
+
+Best regards,
+UniCart Team
+    """
+    send_mail(
+        subject,
+        message,
+        settings.DEFAULT_FROM_EMAIL,
+        [user.email],
+        fail_silently=False,
+    )
+
+
 # ─────────────────────────────────────────
 #  REGISTER
 #  New student signs up
@@ -25,39 +53,11 @@ def register(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
-            
-            # Create UserProfile and generate verification token
+
+            # Create UserProfile and send verification email
             profile = UserProfile.objects.create(user=user)
-            email_token = profile.generate_email_token()
-            
-            # Build verification link
-            verification_url = request.build_absolute_uri(
-                reverse('verify-email', args=[email_token])
-            )
-            
-            # Send verification email
-            subject = 'Verify your UniCart email'
-            message = f"""
-Hi {user.username},
-
-Welcome to UniCart! Please verify your email by clicking the link below:
-
-{verification_url}
-
-This link will expire in 24 hours.
-
-Best regards,
-UniCart Team
-            """
-            
             try:
-                send_mail(
-                    subject,
-                    message,
-                    settings.DEFAULT_FROM_EMAIL,
-                    [user.email],
-                    fail_silently=False,
-                )
+                _send_verification_email(request, user)
                 messages.info(request, 'Account created! Check your email to verify your account.')
                 return redirect('email-verification-sent')
             except Exception as e:
@@ -89,11 +89,16 @@ def user_login(request):
                 profile = user.userprofile
                 if not profile.email_verified:
                     messages.error(request, 'Please verify your email before logging in.')
-                    return redirect('users/login.html')
+                    return redirect('login')
             except UserProfile.DoesNotExist:
-                messages.error(request, 'User profile not found. Please register again.')
-                return redirect('register')
-            
+                profile = UserProfile.objects.create(user=user)
+                try:
+                    _send_verification_email(request, user)
+                    messages.error(request, 'Your account is not verified. A verification email has been sent.')
+                except Exception as e:
+                    messages.error(request, f'Error sending verification email: {str(e)}')
+                return redirect('login')
+
             login(request, user)
             return redirect(request.GET.get('next', 'home'))   # go to intended page or home
         else:
@@ -221,11 +226,30 @@ def account_settings(request):
 
     if request.method == 'POST':
         if 'save_profile' in request.POST:
+            old_email = request.user.email
             profile_form = ProfileUpdateForm(request.POST, instance=request.user)
             if profile_form.is_valid():
-                profile_form.save()
-                messages.success(request, 'Settings saved.')
+                user = profile_form.save()
+                if user.email != old_email:
+                    profile, _ = UserProfile.objects.get_or_create(user=user)
+                    profile.email_verified = False
+                    profile.save()
+                    try:
+                        _send_verification_email(request, user)
+                        messages.success(request, 'Settings saved. A new verification email has been sent.')
+                    except Exception as e:
+                        messages.error(request, f'Error sending verification email: {str(e)}')
+                else:
+                    messages.success(request, 'Settings saved.')
                 return redirect('account_settings')
+
+        if 'resend_verification' in request.POST:
+            try:
+                _send_verification_email(request, request.user)
+                messages.success(request, 'Verification email resent. Check your inbox.')
+            except Exception as e:
+                messages.error(request, f'Error sending verification email: {str(e)}')
+            return redirect('account_settings')
 
         if 'change_password' in request.POST:
             password_form = PasswordChangeForm(user=request.user, data=request.POST)
