@@ -103,20 +103,21 @@
     .message--success { background: #ecfdf5; border-color: #a7f3d0; color: #047857; }
     .message--error { background: #fef2f2; border-color: #fecaca; color: #b91c1c; }
     .message--info { background: #eff6ff; border-color: #bfdbfe; color: #1d4ed8; }
-    .message--warning { background: #fffbeb; border-color: #fde68a; color: #b45309; }
+    body { background-color: var(--page-bg); color: var(--text); font-weight: 500; }
 
     /* Minimal dark-mode overrides for common Tailwind utility classes used in templates */
     .dark .bg-white { background-color: var(--card-bg) !important; }
-    .dark .bg-white\/80 { background-color: rgba(26, 26, 26, 0.85) !important; }
-    .dark .bg-uni-cream { background-color: rgba(255, 255, 255, 0.04) !important; }
+    .dark .bg-white\/80 { background-color: rgba(26, 26, 26, 0.9) !important; }
+    .dark .bg-uni-cream { background-color: rgba(255, 255, 255, 0.05) !important; }
     .dark .border-gray-100 { border-color: var(--border) !important; }
     .dark .border-gray-200 { border-color: var(--border-strong) !important; }
-    .dark .text-gray-400 { color: rgba(249, 249, 247, 0.60) !important; }
-    .dark .text-gray-500 { color: rgba(249, 249, 247, 0.70) !important; }
-    .dark .text-gray-600 { color: rgba(249, 249, 247, 0.78) !important; }
-    .dark .text-gray-700 { color: rgba(249, 249, 247, 0.86) !important; }
+    .dark .text-gray-400 { color: rgba(249, 249, 247, 0.75) !important; }
+    .dark .text-gray-500 { color: rgba(249, 249, 247, 0.85) !important; }
+    .dark .text-gray-600 { color: rgba(249, 249, 247, 0.92) !important; }
+    .dark .text-gray-700 { color: rgba(249, 249, 247, 1.0) !important; }
     .dark .text-uni-black { color: var(--text) !important; }
-    .dark input, .dark textarea, .dark select { color: var(--text); }
+    .dark input, .dark textarea, .dark select { color: var(--text); font-weight: 500; }
+
 
     /* Theme toggle icon (dynamic switch knob) */
     #theme-toggle .theme-knob {

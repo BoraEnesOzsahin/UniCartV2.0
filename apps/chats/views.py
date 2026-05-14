@@ -136,7 +136,7 @@ def conversation_detail(request, conversation_id: int):
     return render(request, 'chats/detail.html', {
         'conversation': conversation,
         'membership': membership,
-        'messages': messages_list,
+        'chat_messages': messages_list,
         'image_form': ImageUploadForm(),
     })
 

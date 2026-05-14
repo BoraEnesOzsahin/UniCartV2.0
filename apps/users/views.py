@@ -54,8 +54,7 @@ def register(request):
         if form.is_valid():
             user = form.save()
 
-            # Create UserProfile and send verification email
-            profile = UserProfile.objects.create(user=user)
+            # UserProfile is automatically created by signals.py
             try:
                 _send_verification_email(request, user)
                 messages.info(request, 'Account created! Check your email to verify your account.')
@@ -120,7 +119,7 @@ def user_login(request):
                     messages.error(request, 'Please verify your email before logging in. You can resend a verification link.')
                     return redirect('resend_verification')
             except UserProfile.DoesNotExist:
-                profile = UserProfile.objects.create(user=user)
+                profile, _ = UserProfile.objects.get_or_create(user=user)
                 try:
                     _send_verification_email(request, user)
                     messages.error(request, 'Your account is not verified. A verification email has been sent.')

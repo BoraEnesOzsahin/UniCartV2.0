@@ -40,17 +40,30 @@
       </div>
     {% endif %}
 
-    <div id="chat-messages" class="p-5 md:p-6 space-y-3 h-[55vh] overflow-y-auto bg-uni-cream">
-      {% for m in messages %}
+    <div id="chat-messages" class="p-5 md:p-6 space-y-4 h-[60vh] overflow-y-auto bg-uni-cream dark:bg-zinc-950">
+      {% for m in chat_messages %}
         <div class="flex {% if m.sender_id == request.user.id %}justify-end{% else %}justify-start{% endif %}">
-          <div class="max-w-[85%] md:max-w-[70%] rounded-2xl px-4 py-3 border {% if m.sender_id == request.user.id %}bg-white border-orange-100{% else %}bg-white border-gray-100{% endif %}">
+          <div class="max-w-[85%] md:max-w-[70%] rounded-2xl px-4 py-3 border shadow-sm
+            {% if m.sender_id == request.user.id %}
+              bg-uni-orange border-uni-orange text-white
+            {% else %}
+              bg-white dark:bg-zinc-800 border-gray-200 dark:border-zinc-700 text-uni-black dark:text-white
+            {% endif %}">
+            
             {% if m.image %}
-              <img src="{{ m.image.url }}" alt="Shared image" class="rounded-xl max-h-72 w-auto mb-2">
+              <img src="{{ m.image.url }}" alt="Shared image" class="rounded-xl max-h-80 w-auto mb-2 shadow-sm border border-black/5">
             {% endif %}
+            
             {% if m.text %}
-              <p class="text-sm text-gray-800 whitespace-pre-wrap break-words">{{ m.text }}</p>
+              <p class="text-sm font-semibold whitespace-pre-wrap break-words leading-relaxed">{{ m.text }}</p>
             {% endif %}
-            <div class="mt-1 flex items-center justify-end gap-2 text-[11px] text-gray-500">
+            
+            <div class="mt-1.5 flex items-center justify-end gap-2 text-[10px] font-black uppercase tracking-wider
+              {% if m.sender_id == request.user.id %}
+                text-white/80
+              {% else %}
+                text-gray-500 dark:text-zinc-400
+              {% endif %}">
               <span>{{ m.created_at|date:"H:i" }}</span>
               {% if m.sender_id == request.user.id %}
                 <span class="chat-status" data-message-id="{{ m.id }}">{{ m.delivery_state|default:"Delivered" }}</span>
