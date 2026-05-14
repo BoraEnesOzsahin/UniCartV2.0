@@ -33,3 +33,18 @@ class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model  = User
         fields = ['first_name', 'last_name', 'email']
+
+        widgets = {
+            'first_name': forms.TextInput(attrs={
+                'class': 'w-full px-4 py-3 border border-gray-200 rounded-xl outline-none focus:border-uni-orange focus:ring-2 focus:ring-orange-100 transition-all',
+                'placeholder': 'First name',
+            }),
+            'last_name': forms.TextInput(attrs={
+                'class': 'w-full px-4 py-3 border border-gray-200 rounded-xl outline-none focus:border-uni-orange focus:ring-2 focus:ring-orange-100 transition-all',
+                'placeholder': 'Last name',
+            }),
+            'email': forms.EmailInput(attrs={
+                'class': 'w-full px-4 py-3 border border-gray-200 rounded-xl outline-none focus:border-uni-orange focus:ring-2 focus:ring-orange-100 transition-all',
+                'placeholder': 'Email address',
+            }),
+        }

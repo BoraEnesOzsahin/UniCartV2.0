@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.mail import send_mail
@@ -196,4 +198,57 @@ def dashboard(request):
         'my_listings':  my_listings,
         'my_favorites': my_favorites,
         'favorited_listing_ids': favorited_listing_ids,
+    })
+
+
+# ─────────────────────────────────────────
+#  SETTINGS  (private — only current user)
+#  Basic account details update
+#  URL: /users/settings/
+# ─────────────────────────────────────────
+@login_required
+def account_settings(request):
+    profile_form = ProfileUpdateForm(instance=request.user)
+    password_form = PasswordChangeForm(user=request.user)
+
+    password_input_class = (
+        'w-full px-4 py-3 border border-gray-200 rounded-xl outline-none '
+        'focus:border-uni-orange focus:ring-2 focus:ring-orange-100 transition-all'
+    )
+    for field_name in ['old_password', 'new_password1', 'new_password2']:
+        if field_name in password_form.fields:
+            password_form.fields[field_name].widget.attrs.update({'class': password_input_class})
+
+    if request.method == 'POST':
+        if 'save_profile' in request.POST:
+            profile_form = ProfileUpdateForm(request.POST, instance=request.user)
+            if profile_form.is_valid():
+                profile_form.save()
+                messages.success(request, 'Settings saved.')
+                return redirect('account_settings')
+
+        if 'change_password' in request.POST:
+            password_form = PasswordChangeForm(user=request.user, data=request.POST)
+            for field_name in ['old_password', 'new_password1', 'new_password2']:
+                if field_name in password_form.fields:
+                    password_form.fields[field_name].widget.attrs.update({'class': password_input_class})
+
+            if password_form.is_valid():
+                user = password_form.save()
+                update_session_auth_hash(request, user)
+                messages.success(request, 'Password updated.')
+                return redirect('account_settings')
+            else:
+                messages.error(request, 'Please correct the errors below.')
+
+    email_verified = False
+    try:
+        email_verified = request.user.userprofile.email_verified
+    except UserProfile.DoesNotExist:
+        email_verified = False
+
+    return render(request, 'users/settings.html', {
+        'profile_form': profile_form,
+        'password_form': password_form,
+        'email_verified': email_verified,
     })
