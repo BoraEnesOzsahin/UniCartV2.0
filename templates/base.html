@@ -14,6 +14,7 @@
   
   <script>
     tailwind.config = {
+      darkMode: 'class',
       theme: {
         extend: {
           colors: {
@@ -29,8 +30,40 @@
     }
   </script>
 
+  <script>
+    (() => {
+      try {
+        const stored = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const useDark = stored ? stored === 'dark' : prefersDark;
+        document.documentElement.classList.toggle('dark', useDark);
+      } catch {
+        // no-op
+      }
+    })();
+  </script>
+
   <style>
-    body { background-color: #F9F9F7; }
+    :root {
+      --page-bg: #F9F9F7;
+      --card-bg: #ffffff;
+      --text: #1A1A1A;
+      --muted: #6b7280;
+      --border: #f1f5f9;
+      --border-strong: #e5e7eb;
+    }
+    .dark {
+      --page-bg: #1A1A1A;
+      --card-bg: rgba(255, 255, 255, 0.04);
+      --text: #F9F9F7;
+      --muted: rgba(249, 249, 247, 0.70);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-strong: rgba(255, 255, 255, 0.14);
+      color-scheme: dark;
+    }
+
+    body { background-color: var(--page-bg); color: var(--text); }
+
     .varsity-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
     .varsity-card:hover { transform: translateY(-6px); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1); }
     .text-outline { -webkit-text-stroke: 1px black; color: transparent; }
@@ -44,24 +77,24 @@
     .btn-danger { background: #ef4444; color: #fff; }
     .btn-danger:hover { background: #b91c1c; }
     .listing-grid, .listings-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
-    .listing-card { display: block; background: #fff; border: 1px solid #f1f5f9; border-radius: 1.25rem; overflow: hidden; transition: all 0.2s ease; }
+    .listing-card { display: block; background: var(--card-bg); border: 1px solid var(--border); border-radius: 1.25rem; overflow: hidden; transition: all 0.2s ease; }
     .listing-card:hover { transform: translateY(-4px); box-shadow: 0 15px 25px -12px rgba(15, 23, 42, 0.2); }
     .listing-img { background: #f8fafc; aspect-ratio: 1 / 1; position: relative; display: flex; align-items: center; justify-content: center; }
     .listing-img img { width: 100%; height: 100%; object-fit: cover; }
     .listing-condition { position: absolute; top: 0.6rem; right: 0.6rem; font-size: 0.7rem; background: #111827; color: #fff; border-radius: 999px; padding: 0.2rem 0.5rem; }
     .listing-body { padding: 1rem; }
     .listing-title { font-weight: 800; margin-bottom: 0.3rem; }
-    .listing-meta { font-size: 0.78rem; color: #6b7280; margin-bottom: 0.8rem; }
+    .listing-meta { font-size: 0.78rem; color: var(--muted); margin-bottom: 0.8rem; }
     .listing-price { font-size: 1.2rem; font-weight: 900; color: #FF5F1F; }
-    .listing-seller { font-size: 0.78rem; color: #6b7280; }
-    .auth-form, .form-wrapper, .delete-confirmation, .profile-section, .support-section, .listing-detail, .card { background: #fff; border: 1px solid #f1f5f9; border-radius: 1.5rem; padding: 1.5rem; }
+    .listing-seller { font-size: 0.78rem; color: var(--muted); }
+    .auth-form, .form-wrapper, .delete-confirmation, .profile-section, .support-section, .listing-detail, .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 1.5rem; padding: 1.5rem; }
     .form-group { margin-bottom: 1rem; }
     .form-group label { display: block; font-weight: 700; margin-bottom: 0.35rem; font-size: 0.9rem; }
-    .form-group input, .form-group textarea, .form-group select, .search-form input, .search-form select { width: 100%; border: 1px solid #e5e7eb; border-radius: 0.75rem; padding: 0.65rem 0.85rem; background: #fff; }
+    .form-group input, .form-group textarea, .form-group select, .search-form input, .search-form select { width: 100%; border: 1px solid var(--border-strong); border-radius: 0.75rem; padding: 0.65rem 0.85rem; background: var(--card-bg); color: var(--text); }
     .form-group input:focus, .form-group textarea:focus, .form-group select:focus, .search-form input:focus, .search-form select:focus { outline: none; border-color: #FF5F1F; box-shadow: 0 0 0 3px rgba(255, 95, 31, 0.12); }
-    .search-form { display: grid; gap: 0.75rem; margin-bottom: 1rem; background: #fff; border: 1px solid #f1f5f9; border-radius: 1rem; padding: 1rem; }
+    .search-form { display: grid; gap: 0.75rem; margin-bottom: 1rem; background: var(--card-bg); border: 1px solid var(--border); border-radius: 1rem; padding: 1rem; }
     .filter-grid { display: grid; gap: 0.75rem; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
-    .pagination { display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; margin-top: 1rem; background: #fff; border: 1px solid #f1f5f9; border-radius: 0.9rem; padding: 0.75rem 1rem; }
+    .pagination { display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; margin-top: 1rem; background: var(--card-bg); border: 1px solid var(--border); border-radius: 0.9rem; padding: 0.75rem 1rem; }
     .pagination a { color: #FF5F1F; font-weight: 700; }
     .alert { border-radius: 0.75rem; padding: 0.8rem 1rem; margin-bottom: 1rem; border: 1px solid transparent; }
     .alert-info { background: #eff6ff; border-color: #bfdbfe; color: #1d4ed8; }
@@ -71,12 +104,35 @@
     .message--error { background: #fef2f2; border-color: #fecaca; color: #b91c1c; }
     .message--info { background: #eff6ff; border-color: #bfdbfe; color: #1d4ed8; }
     .message--warning { background: #fffbeb; border-color: #fde68a; color: #b45309; }
+
+    /* Minimal dark-mode overrides for common Tailwind utility classes used in templates */
+    .dark .bg-white { background-color: var(--card-bg) !important; }
+    .dark .bg-white\/80 { background-color: rgba(26, 26, 26, 0.85) !important; }
+    .dark .bg-uni-cream { background-color: rgba(255, 255, 255, 0.04) !important; }
+    .dark .border-gray-100 { border-color: var(--border) !important; }
+    .dark .border-gray-200 { border-color: var(--border-strong) !important; }
+    .dark .text-gray-400 { color: rgba(249, 249, 247, 0.60) !important; }
+    .dark .text-gray-500 { color: rgba(249, 249, 247, 0.70) !important; }
+    .dark .text-gray-600 { color: rgba(249, 249, 247, 0.78) !important; }
+    .dark .text-gray-700 { color: rgba(249, 249, 247, 0.86) !important; }
+    .dark .text-uni-black { color: var(--text) !important; }
+    .dark input, .dark textarea, .dark select { color: var(--text); }
+
+    /* Theme toggle icon (dynamic switch knob) */
+    #theme-toggle .theme-knob {
+      transition: transform 180ms ease;
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+    .dark #theme-toggle .theme-knob {
+      transform: translateX(7px);
+    }
   </style>
 
   {% load static %}
   {% block extra_css %}{% endblock %}
 </head>
-<body class="font-sans antialiased text-uni-black">
+<body class="font-sans antialiased">
 
   {% include 'partials/navbar.html' %}
 
@@ -100,6 +156,31 @@
   {% include 'partials/footer.html' %}
 
   <script src="{% static 'js/main.js' %}"></script>
+  <script>
+    (() => {
+      const btn = document.getElementById('theme-toggle');
+      if (!btn) return;
+
+      const setLabel = () => {
+        const isDark = document.documentElement.classList.contains('dark');
+        btn.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+        const textEl = btn.querySelector('[data-theme-text]');
+        if (textEl) textEl.textContent = isDark ? 'Light' : 'Dark';
+      };
+
+      setLabel();
+
+      btn.addEventListener('click', () => {
+        const isDark = document.documentElement.classList.toggle('dark');
+        try {
+          localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        } catch {
+          // no-op
+        }
+        setLabel();
+      });
+    })();
+  </script>
   {% block extra_js %}{% endblock %}
 </body>
 </html>
