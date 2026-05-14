@@ -5,3 +5,7 @@ db.sqlite3
 media/
 .env
 *.log
+
+# Local notes
+yapılacaklar.txt
+yapilacaklar.txt

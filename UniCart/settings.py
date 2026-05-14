@@ -17,9 +17,23 @@ if load_dotenv:
 
 SECRET_KEY = os.getenv('SECRET_KEY', 'replace-this-with-a-real-secret-key-before-deployment')
 
-DEBUG = True   # ← set to False when deploying
+IS_VERCEL = bool(os.getenv('VERCEL')) or bool(os.getenv('VERCEL_URL')) or bool(os.getenv('VERCEL_ENV'))
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']   # add your domain here when deploying
+DEBUG_DEFAULT = 'False' if IS_VERCEL else 'True'
+DEBUG = os.getenv('DEBUG', DEBUG_DEFAULT).lower() in ('1', 'true', 'yes', 'on')
+
+# Comma-separated, e.g. "localhost,127.0.0.1,.vercel.app".
+ALLOWED_HOSTS_DEFAULT = 'localhost,127.0.0.1,.vercel.app' if IS_VERCEL else 'localhost,127.0.0.1'
+ALLOWED_HOSTS = [
+    host.strip()
+    for host in os.getenv('ALLOWED_HOSTS', ALLOWED_HOSTS_DEFAULT).split(',')
+    if host.strip()
+]
+
+# Vercel provides the deployment URL without scheme (e.g. "my-app.vercel.app").
+vercel_url = os.getenv('VERCEL_URL')
+if vercel_url and vercel_url not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append(vercel_url)
 
 
 # ── Apps ──────────────────────────────────
