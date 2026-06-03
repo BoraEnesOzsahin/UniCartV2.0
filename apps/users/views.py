@@ -31,13 +31,17 @@ This link will expire in 24 hours.
 Best regards,
 UniCart Team
     """
-    send_mail(
-        subject,
-        message,
-        settings.DEFAULT_FROM_EMAIL,
-        [user.email],
-        fail_silently=False,
-    )
+    try:
+        send_mail(
+            subject,
+            message,
+            settings.DEFAULT_FROM_EMAIL,
+            [user.email],
+            fail_silently=False,
+        )
+    except Exception as e:
+        print(f"Error sending verification email: {e}")
+        # Optionally, you can add a message to the request to notify the user/admin
 
 
 # ─────────────────────────────────────────
@@ -201,7 +205,7 @@ def email_verification_success(request):
 def profile(request, username):
     from django.contrib.auth.models import User
     user     = User.objects.get(username=username)  # TODO: handle 404
-    listings = user.listings.filter(is_active=True, is_sold=False)
+    listings = user.listings.filter(is_active=True).select_related('category')
     favorited_listing_ids = set()
     if request.user.is_authenticated:
         favorited_listing_ids = set(
@@ -222,8 +226,8 @@ def profile(request, username):
 # ─────────────────────────────────────────
 @login_required
 def dashboard(request):
-    my_listings = request.user.listings.all()
-    my_favorites = request.user.favorites.select_related('listing').all()
+    my_listings = request.user.listings.all().select_related('category')
+    my_favorites = request.user.favorites.select_related('listing', 'listing__category').all()
     favorited_listing_ids = set(
         request.user.favorites.values_list('listing_id', flat=True)
     )

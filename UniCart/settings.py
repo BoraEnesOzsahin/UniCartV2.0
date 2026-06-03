@@ -43,6 +43,7 @@ if vercel_url and vercel_url not in ALLOWED_HOSTS:
 
 # ── Apps ──────────────────────────────────
 INSTALLED_APPS = [
+    'jazzmin',
     'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -165,3 +166,30 @@ LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'Europe/Istanbul'
 USE_I18N = True
 USE_TZ = True
+
+JAZZMIN_SETTINGS = {
+    'site_title': 'UniCart Admin',
+    'site_header': 'UniCart',
+    'site_brand': 'UniCart Admin',
+    'welcome_sign': 'Welcome to UniCart Admin',
+    'copyright': 'UniCart Ltd',
+    'show_sidebar': True,
+    'navigation_expanded': True,
+    'icons': {
+        'auth': 'fas fa-users-cog',
+        'auth.user': 'fas fa-user',
+        'auth.Group': 'fas fa-users',
+        'users.userprofile': 'fas fa-id-card',
+        'users.university': 'fas fa-university',
+        'listings.category': 'fas fa-tags',
+        'listings.listing': 'fas fa-shopping-cart',
+        'chats.conversation': 'fas fa-comments',
+        'chats.message': 'fas fa-envelope',
+    },
+}
+
+JAZZMIN_UI_TWEAKS = {
+    'theme': 'flatly',
+    'dark_mode_theme': 'darkly',
+}
+

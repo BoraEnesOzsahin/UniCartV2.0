@@ -20,6 +20,9 @@
 
       <div>
         <h1 class="text-3xl font-black mb-2">{{ listing.title }}</h1>
+        {% if listing.is_sold %}
+          <div class="inline-block bg-red-600 text-white text-xs font-black px-3 py-1 rounded-full mb-3">SOLD</div>
+        {% endif %}
         <p class="text-3xl text-uni-orange font-black mb-2">₺{{ listing.price }}</p>
         <span class="inline-block text-xs font-bold bg-uni-black text-white rounded-full px-3 py-1 mb-4">{{ listing.get_condition_display }}</span>
         <p class="text-gray-700 leading-relaxed mb-5">{{ listing.description }}</p>
@@ -61,7 +64,15 @@
 
   <!-- Show edit/delete only to the seller -->
   {% if user == listing.seller %}
-    <div class="mt-4 flex items-center gap-3">
+    <div class="mt-4 flex flex-wrap items-center gap-3">
+      {% if not listing.is_sold %}
+        <form method="post" action="{% url 'mark_as_sold' listing.pk %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-primary" onclick="return confirm('Are you sure you want to mark this as sold? It will be hidden from browse.')">
+            ✅ Mark as sold
+          </button>
+        </form>
+      {% endif %}
       <a href="{% url 'listing_edit' listing.pk %}" class="btn btn-secondary">Edit listing</a>
       <a href="{% url 'listing_delete' listing.pk %}" class="btn btn-danger">Delete</a>
     </div>

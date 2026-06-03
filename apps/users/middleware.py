@@ -41,8 +41,13 @@ class RequireEmailVerificationMiddleware:
             return None
 
         try:
+            # Check session cache first
+            if request.session.get('email_verified'):
+                return None
+            
             profile = request.user.userprofile
             if profile.email_verified:
+                request.session['email_verified'] = True
                 return None
         except UserProfile.DoesNotExist:
             pass

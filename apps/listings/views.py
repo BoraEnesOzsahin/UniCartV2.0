@@ -12,7 +12,11 @@ from .forms import ListingForm
 #  URL: /
 # ─────────────────────────────────────────
 def home(request):
-    listings   = Listing.objects.filter(is_active=True, is_sold=False)[:6]
+    listings = (
+        Listing.objects
+        .filter(is_active=True, is_sold=False)
+        .select_related('category', 'seller')[:6]
+    )
     categories = Category.objects.all()
     favorited_listing_ids = set()
     if request.user.is_authenticated:
@@ -33,7 +37,7 @@ def home(request):
 #  URL: /listings/
 # ─────────────────────────────────────────
 def listing_list(request):
-    listings = Listing.objects.filter(is_active=True, is_sold=False)
+    listings = Listing.objects.filter(is_active=True, is_sold=False).select_related('category', 'seller')
 
     # --- Search ---
     query = request.GET.get('q')
@@ -74,7 +78,7 @@ def category_listings(request, slug):
         is_active=True,
         is_sold=False,
         category=category,
-    )
+    ).select_related('seller')
 
     paginator = Paginator(listings, 8)
     page = request.GET.get('page')
@@ -101,7 +105,7 @@ def category_listings(request, slug):
 #  URL: /listings/<id>/
 # ─────────────────────────────────────────
 def listing_detail(request, pk):
-    listing = get_object_or_404(Listing, pk=pk, is_active=True)
+    listing = get_object_or_404(Listing.objects.select_related('category', 'seller'), pk=pk, is_active=True)
     is_favorited = False
     if request.user.is_authenticated:
         is_favorited = Favorite.objects.filter(user=request.user, listing=listing).exists()
@@ -204,3 +208,16 @@ def listing_delete(request, pk):
         return redirect('listing_list')
 
     return render(request, 'listings/delete.html', {'listing': listing})
+
+
+@login_required
+def mark_as_sold(request, pk):
+    listing = get_object_or_404(Listing, pk=pk, seller=request.user)
+    
+    if request.method == 'POST':
+        listing.is_sold = True
+        listing.save()
+        messages.success(request, f'Listing "{listing.title}" marked as sold!')
+        return redirect('listing_detail', pk=listing.pk)
+    
+    return redirect('listing_detail', pk=listing.pk)
