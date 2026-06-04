@@ -121,26 +121,39 @@ TEMPLATES = [{
 # yoksa build sırasında sqlite kullan ki deploy aşamasında hata yaşanmasın.
 DATABASE_URL = os.getenv('DATABASE_URL')
 DB_HOST = os.getenv('DB_HOST')
-DB_PORT = os.getenv('DB_PORT', '6543')
+DB_PORT = os.getenv('DB_PORT', '5432')
 DB_NAME = os.getenv('DB_NAME')
 DB_USER = os.getenv('DB_USER')
 DB_PASSWORD = os.getenv('DB_PASSWORD')
 DB_SSL_MODE = os.getenv('DB_SSL_MODE', 'require')
 
+# Use django-db-pool with connection pooling for better concurrency
 if DB_HOST and DB_NAME and DB_USER and DB_PASSWORD:
-    database_url = (
-        f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
-        f'?sslmode={DB_SSL_MODE}'
-    )
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django_db_pool.postgresql_psycopg2',
+            'NAME': DB_NAME,
+            'USER': DB_USER,
+            'PASSWORD': DB_PASSWORD,
+            'HOST': DB_HOST,
+            'PORT': DB_PORT,
+            'CONN_MAX_AGE': 5,
+            'POOL': {
+                'MAXSIZE': 20,  # Keep low to avoid exhausting Supabase connection limits
+            },
+            'OPTIONS': {
+                'sslmode': DB_SSL_MODE,
+            }
+        }
+    }
 else:
-    database_url = DATABASE_URL
-
-DATABASES = {
-    'default': dj_database_url.config(
-        default=database_url or 'sqlite:///' + str(BASE_DIR / 'db.sqlite3'),
-        conn_max_age=5,
-    )
-}
+    # Fallback to SQLite for development
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 # ── Static files (CSS, JS, images) ────────
