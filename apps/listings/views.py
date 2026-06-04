@@ -204,3 +204,19 @@ def listing_delete(request, pk):
         return redirect('listing_list')
 
     return render(request, 'listings/delete.html', {'listing': listing})
+
+
+@login_required
+def listing_mark_sold(request, pk):
+    """Mark a listing as sold (seller-only action)."""
+    if request.method != 'POST':
+        return redirect('listing_detail', pk=pk)
+
+    listing = get_object_or_404(Listing, pk=pk, seller=request.user, is_active=True)
+    listing.is_sold = True
+    listing.save()
+    messages.success(request, 'Listing marked as sold.')
+    next_url = request.POST.get('next')
+    if next_url:
+        return redirect(next_url)
+    return redirect('listing_detail', pk=pk)

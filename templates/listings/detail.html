@@ -64,6 +64,15 @@
     <div class="mt-4 flex items-center gap-3">
       <a href="{% url 'listing_edit' listing.pk %}" class="btn btn-secondary">Edit listing</a>
       <a href="{% url 'listing_delete' listing.pk %}" class="btn btn-danger">Delete</a>
+      {% if not listing.is_sold %}
+        <form method="post" action="{% url 'listing_mark_sold' listing.pk %}">
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{{ request.get_full_path }}">
+          <button type="submit" class="btn btn-warning">Mark as sold</button>
+        </form>
+      {% else %}
+        <span class="px-3 py-2 bg-gray-200 rounded-full text-sm font-bold">Sold</span>
+      {% endif %}
     </div>
   {% endif %}
 </section>

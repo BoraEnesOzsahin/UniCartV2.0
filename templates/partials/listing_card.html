@@ -9,6 +9,9 @@
       <span class="listing-condition cond-{{ listing.condition }}">
         {{ listing.get_condition_display }}
       </span>
+      {% if listing.is_sold %}
+        <span class="listing-sold-badge">Sold</span>
+      {% endif %}
     </div>
     <div class="listing-body">
       <div class="listing-title">{{ listing.title }}</div>

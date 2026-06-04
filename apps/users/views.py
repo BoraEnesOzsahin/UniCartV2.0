@@ -204,7 +204,9 @@ def email_verification_success(request):
 def profile(request, username):
     from django.contrib.auth.models import User
     user     = User.objects.get(username=username)  # TODO: handle 404
-    listings = user.listings.filter(is_active=True, is_sold=False)
+    # Show active listings for the user. Include sold listings so they are visible on the
+    # seller profile (they remain hidden from general browse pages).
+    listings = user.listings.filter(is_active=True).order_by('-created_at')
     favorited_listing_ids = set()
     if request.user.is_authenticated:
         favorited_listing_ids = set(

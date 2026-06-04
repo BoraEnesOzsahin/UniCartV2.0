@@ -61,11 +61,27 @@ INSTALLED_APPS = [
 
 ASGI_APPLICATION = 'UniCart.asgi.application'
 
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels.layers.InMemoryChannelLayer',
-    },
-}
+import logging
+
+# Channel layer config: use Redis when REDIS_URL is provided, otherwise in-memory (single instance)
+if os.getenv('REDIS_URL'):
+    CHANNEL_LAYERS = {
+        'default': {
+            'BACKEND': 'channels_redis.core.RedisChannelLayer',
+            'CONFIG': {
+                'hosts': [os.getenv('REDIS_URL')],
+            },
+        },
+    }
+else:
+    CHANNEL_LAYERS = {
+        'default': {
+            'BACKEND': 'channels.layers.InMemoryChannelLayer',
+        },
+    }
+
+# Basic logger for ASGI / Channels troubleshooting
+logging.getLogger('django.channels').addHandler(logging.NullHandler())
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -103,10 +119,27 @@ TEMPLATES = [{
 # ── Database ──────────────────────────────
 # Eğer Render üzerinde DATABASE_URL tanımlıysa Supabase'e bağlan,
 # yoksa build sırasında sqlite kullan ki deploy aşamasında hata yaşanmasın.
+DATABASE_URL = os.getenv('DATABASE_URL')
+DB_HOST = os.getenv('DB_HOST')
+DB_PORT = os.getenv('DB_PORT', '5432')
+DB_NAME = os.getenv('DB_NAME')
+DB_USER = os.getenv('DB_USER')
+DB_PASSWORD = os.getenv('DB_PASSWORD')
+DB_SSL_MODE = os.getenv('DB_SSL_MODE', 'require')
+
+if DB_HOST and DB_NAME and DB_USER and DB_PASSWORD:
+    database_url = (
+        f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
+        f'?sslmode={DB_SSL_MODE}'
+    )
+else:
+    database_url = DATABASE_URL
+
 DATABASES = {
     'default': dj_database_url.config(
-        default='sqlite:///' + str(BASE_DIR / 'db.sqlite3'),
-        conn_max_age=600
+        default=database_url or 'sqlite:///' + str(BASE_DIR / 'db.sqlite3'),
+        conn_max_age=600,
+        ssl_require=True,
     )
 }
 
