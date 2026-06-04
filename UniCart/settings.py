@@ -185,3 +185,26 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# --- Security: proxy / cookie settings for production (Render, Heroku, etc.)
+# Let Django know it's behind a proxy that sets X-Forwarded-Proto
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# Secure cookies in non-debug (production) environments
+SESSION_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SECURE = not DEBUG
+
+# CSRF trusted origins: allow explicit env var or derive from ALLOWED_HOSTS
+# For Django >=4.0 this must include scheme (https://example.onrender.com)
+raw_trusted = os.getenv('CSRF_TRUSTED_ORIGINS', '')
+if raw_trusted:
+    CSRF_TRUSTED_ORIGINS = [s.strip() for s in raw_trusted.split(',') if s.strip()]
+else:
+    CSRF_TRUSTED_ORIGINS = []
+    for h in ALLOWED_HOSTS:
+        if h and h not in ('localhost', '127.0.0.1'):
+            # prefer https
+            if h.startswith('http://') or h.startswith('https://'):
+                CSRF_TRUSTED_ORIGINS.append(h)
+            else:
+                CSRF_TRUSTED_ORIGINS.append(f'https://{h}')
