@@ -152,14 +152,14 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', EMAIL_HOST_USER or 'noreply@unicart.local')
 
-EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', '')
-if not EMAIL_BACKEND:
-    if EMAIL_HOST_USER and EMAIL_HOST_PASSWORD:
-        EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-    else:
-        EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'anymail.backends.gmail.EmailBackend'  # Asenkron Gmail backend'i aktif ettik
 
-# If you want to force SMTP delivery in development, set EMAIL_BACKEND in .env.
+ANYMAIL = {
+    "GMAIL_CLIENT_ID": os.getenv("GMAIL_CLIENT_ID"),
+    "GMAIL_CLIENT_SECRET": os.getenv("GMAIL_CLIENT_SECRET"),
+}
+
+# Diğer girdiğin normal SMTP ayarları (EMAIL_HOST_USER, EMAIL_HOST_PASSWORD vb.) aynen kalabilir.
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LANGUAGE_CODE = 'en-us'
