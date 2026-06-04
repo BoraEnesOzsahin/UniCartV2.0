@@ -13,18 +13,18 @@ from listings.models import Category
 from django.utils.text import slugify
 
 categories = [
-    {'name': 'Technology & Electronics', 'icon': '💻'},
-    {'name': 'Textbooks & Academics', 'icon': '📚'},
-    {'name': 'Living & Dorm Essentials', 'icon': '🛏️'},
-    {'name': 'Apparel & Accessories', 'icon': '👕'},
-    {'name': 'Hobbies & Sports', 'icon': '🎮'},
-    {'name': 'Tickets & Services', 'icon': '🎫'},
+    {'name': 'Technology & Electronics', 'icon': '💻', 'slug': 'technology-electronics'},
+    {'name': 'Textbooks & Academics', 'icon': '📚', 'slug': 'textbooks-academics'},
+    {'name': 'Living & Dorm Essentials', 'icon': '🛏️', 'slug': 'living-dorm-essentials'},
+    {'name': 'Apparel & Accessories', 'icon': '👕', 'slug': 'apparel-accessories'},
+    {'name': 'Hobbies & Sports', 'icon': '🎮', 'slug': 'hobbies-sports'},
+    {'name': 'Tickets & Services', 'icon': '🎫', 'slug': 'tickets-services'},
 ]
 
 for cat in categories:
-    obj, created = Category.objects.get_or_create(
-        name=cat['name'],
-        defaults={'slug': slugify(cat['name']), 'icon': cat['icon']}
+    obj, created = Category.objects.update_or_create(
+        slug=cat['slug'],
+        defaults={'name': cat['name'], 'icon': cat['icon']}
     )
     status = 'Created' if created else 'Already exists'
     print(f"{status}: {obj.name}")

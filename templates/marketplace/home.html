@@ -37,7 +37,8 @@
         <h2>Browse Categories</h2>
         <div class="category-grid">
             {% for category in categories %}
-            <a href="{% url 'listing_list' %}?category={{ category.id }}" class="category-card">
+            <a href="{% url 'listing_list' %}?category={{ category.slug }}" class="category-card">
+                <div class="category-icon">{{ category.icon|default:'📦' }}</div>
                 <h3>{{ category.name }}</h3>
             </a>
             {% endfor %}

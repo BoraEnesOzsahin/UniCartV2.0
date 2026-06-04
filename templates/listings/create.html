@@ -41,6 +41,9 @@
                                 {{ category.icon }} {{ category.name }}
                             </option>
                         {% endfor %}
+                        <option value="" disabled>&nbsp;</option>
+                        <option value="" disabled>&nbsp;</option>
+                        <option value="" disabled>&nbsp;</option>
                     </select>
                     {% if form.category.errors %}
                         <p class="text-red-500 text-sm mt-1">{{ form.category.errors.0 }}</p>

@@ -106,6 +106,7 @@ TEMPLATES = [{
 # Finally, we fall back to local SQLite.
 
 db_name = os.getenv('DB_NAME')
+ssl_require = os.getenv('DB_SSL', 'True').lower() in ('1', 'true', 'yes', 'on', 'require')
 if db_name:
     # Use individual variables (Safe for passwords with special chars)
     DATABASES = {
@@ -117,6 +118,9 @@ if db_name:
             'HOST': os.getenv('DB_HOST', 'localhost'),
             'PORT': os.getenv('DB_PORT', '5432'),
             'CONN_MAX_AGE': 600,
+            'OPTIONS': {
+                'sslmode': os.getenv('DB_SSL_MODE', 'require'),
+            },
         }
     }
 else:
@@ -126,6 +130,7 @@ else:
             default=f'sqlite:///{BASE_DIR / "db.sqlite3"}',
             conn_max_age=600,
             conn_health_checks=True,
+            ssl_require=ssl_require,
         )
     }
 
@@ -151,6 +156,13 @@ EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True').lower() in ('1', 'true', 'yes
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', EMAIL_HOST_USER or 'noreply@unicart.local')
+
+# Supabase configuration
+SUPABASE_URL = os.getenv('SUPABASE_URL', '')
+SUPABASE_ANON_KEY = os.getenv('SUPABASE_ANON_KEY', '')
+SUPABASE_SERVICE_ROLE_KEY = os.getenv('SUPABASE_SERVICE_ROLE_KEY', '')
+SUPABASE_JWT_SECRET = os.getenv('SUPABASE_JWT_SECRET', '')
+SUPABASE_DB_SSL_MODE = os.getenv('DB_SSL_MODE', 'require')
 
 # Proje Render'da (canlıda) çalışırken mailleri göndermek yerine loglara yazar, böylece kilitlenme yaşanmaz.
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
