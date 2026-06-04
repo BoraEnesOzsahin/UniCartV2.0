@@ -25,7 +25,7 @@ Hi {user.username},
 
 Welcome to UniCart! Please verify your email by clicking the link below:
 
-<a href=\"{verification_url}\">Verify Email</a>
+<a href="{verification_url}">Verify Email</a>
 
 Or copy this link: {verification_url}
 
