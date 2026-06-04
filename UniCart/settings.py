@@ -75,7 +75,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'users.middleware.RequireEmailVerificationMiddleware',
+    # 'users.middleware.RequireEmailVerificationMiddleware',  # ← BAŞINA # KOYARAK İPTAL EDİN
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
@@ -152,14 +152,8 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', EMAIL_HOST_USER or 'noreply@unicart.local')
 
-EMAIL_BACKEND = 'anymail.backends.gmail.EmailBackend'  # Asenkron Gmail backend'i aktif ettik
-
-ANYMAIL = {
-    "GMAIL_CLIENT_ID": os.getenv("GMAIL_CLIENT_ID"),
-    "GMAIL_CLIENT_SECRET": os.getenv("GMAIL_CLIENT_SECRET"),
-}
-
-# Diğer girdiğin normal SMTP ayarları (EMAIL_HOST_USER, EMAIL_HOST_PASSWORD vb.) aynen kalabilir.
+# Proje Render'da (canlıda) çalışırken mailleri göndermek yerine loglara yazar, böylece kilitlenme yaşanmaz.
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LANGUAGE_CODE = 'en-us'
