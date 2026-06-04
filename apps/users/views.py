@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.core.mail import send_mail
 from django.conf import settings
 from django.urls import reverse
+from django.utils.html import strip_tags
 from .forms import RegisterForm, ProfileUpdateForm
 from .models import UserProfile
 from listings.models import Favorite
@@ -19,23 +20,27 @@ def _send_verification_email(request, user):
         reverse('verify-email', args=[email_token])
     )
     subject = 'Verify your UniCart email'
-    message = f"""
+    html_message = f"""
 Hi {user.username},
 
 Welcome to UniCart! Please verify your email by clicking the link below:
 
-{verification_url}
+<a href=\"{verification_url}\">Verify Email</a>
+
+Or copy this link: {verification_url}
 
 This link will expire in 24 hours.
 
 Best regards,
 UniCart Team
     """
+    message = strip_tags(html_message)
     send_mail(
         subject,
         message,
         settings.DEFAULT_FROM_EMAIL,
         [user.email],
+        html_message=html_message,
         fail_silently=False,
     )
 
