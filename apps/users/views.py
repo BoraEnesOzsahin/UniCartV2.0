@@ -58,6 +58,11 @@ def register(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
+            user.is_active = True
+            user.save()
+            profile, _ = UserProfile.objects.get_or_create(user=user)
+            profile.email_verified = True
+            profile.save()
 
             # UserProfile is automatically created by signals.py
             try:
