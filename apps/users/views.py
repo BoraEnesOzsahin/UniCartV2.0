@@ -4,7 +4,7 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
 from django.urls import reverse
 from django.utils.html import strip_tags
@@ -21,28 +21,26 @@ def _send_verification_email(request, user):
     )
     subject = 'Verify your UniCart email'
     html_message = f"""
-Hi {user.username},
-
-Welcome to UniCart! Please verify your email by clicking the link below:
-
-<a href="{verification_url}">Verify Email</a>
-
+Hi {user.username},<br><br>
+Welcome to UniCart! Please verify your email by clicking the link below:<br><br>
+<a href="{verification_url}">Verify Email</a><br><br>
 Or copy this link: {verification_url}
-
-This link will expire in 24 hours.
-
-Best regards,
+<br><br>
+This link will expire in 24 hours.<br><br>
+Best regards,<br>
 UniCart Team
     """
     message = strip_tags(html_message)
-    send_mail(
+    msg = EmailMultiAlternatives(
         subject,
         message,
         settings.DEFAULT_FROM_EMAIL,
         [user.email],
-        html_message=html_message,
-        fail_silently=False,
     )
+    msg.attach_alternative(html_message, "text/html")
+    msg.encoding = 'utf-8'
+    msg.extra_headers = {'Content-Transfer-Encoding': 'base64'}
+    msg.send(fail_silently=False)
 
 
 # ─────────────────────────────────────────
@@ -64,15 +62,10 @@ def register(request):
             profile.email_verified = True
             profile.save()
 
-            # UserProfile is automatically created by signals.py
-            try:
-                _send_verification_email(request, user)
-                messages.info(request, 'Account created! Check your email to verify your account.')
-                return redirect('email-verification-sent')
-            except Exception as e:
-                messages.error(request, f'Error sending verification email: {str(e)}')
-                user.delete()
-                return redirect('register')
+            # Email verification is bypassed on registration to avoid invalid/broken verification links.
+            # _send_verification_email(request, user)
+            messages.success(request, 'Account created! You can now log in.')
+            return redirect('login')
     else:
         form = RegisterForm()
 
