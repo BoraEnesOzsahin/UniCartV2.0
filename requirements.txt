@@ -12,7 +12,6 @@ constantly==23.10.4
 cryptography==48.0.0
 daphne==4.2.1
 dj-database-url==3.1.2
-django-db-pool
 Django==6.0.4
 django-anymail==15.0
 gunicorn==26.0.0
