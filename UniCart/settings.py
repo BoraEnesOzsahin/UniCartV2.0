@@ -138,7 +138,7 @@ else:
 DATABASES = {
     'default': dj_database_url.config(
         default=database_url or 'sqlite:///' + str(BASE_DIR / 'db.sqlite3'),
-        conn_max_age=30,
+        conn_max_age=0,
         ssl_require=True,
     )
 }
@@ -189,6 +189,10 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 # --- Security: proxy / cookie settings for production (Render, Heroku, etc.)
 # Let Django know it's behind a proxy that sets X-Forwarded-Proto
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# Use signed cookie sessions instead of database sessions to avoid pooling bottleneck
+# This prevents every request from exhausting the DB connection pool
+SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 
 # Secure cookies in non-debug (production) environments
 SESSION_COOKIE_SECURE = not DEBUG
