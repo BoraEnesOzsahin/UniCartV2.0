@@ -101,38 +101,14 @@ TEMPLATES = [{
 
 
 # ── Database ──────────────────────────────
-# We prioritize individual DB_* variables for reliability (Supabase).
-# We then check DATABASE_URL.
-# Finally, we fall back to local SQLite.
-
-db_name = os.getenv('DB_NAME')
-ssl_require = os.getenv('DB_SSL', 'True').lower() in ('1', 'true', 'yes', 'on', 'require')
-if db_name:
-    # Use individual variables (Safe for passwords with special chars)
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': db_name,
-            'USER': os.getenv('DB_USER', 'postgres'),
-            'PASSWORD': os.getenv('DB_PASSWORD', ''),
-            'HOST': os.getenv('DB_HOST', 'localhost'),
-            'PORT': os.getenv('DB_PORT', '5432'),
-            'CONN_MAX_AGE': 600,
-            'OPTIONS': {
-                'sslmode': os.getenv('DB_SSL_MODE', 'require'),
-            },
-        }
-    }
-else:
-    # Use DATABASE_URL or SQLite
-    DATABASES = {
-        'default': dj_database_url.config(
-            default=f'sqlite:///{BASE_DIR / "db.sqlite3"}',
-            conn_max_age=600,
-            conn_health_checks=True,
-            ssl_require=ssl_require,
-        )
-    }
+# Eğer Render üzerinde DATABASE_URL tanımlıysa Supabase'e bağlan,
+# yoksa build sırasında sqlite kullan ki deploy aşamasında hata yaşanmasın.
+DATABASES = {
+    'default': dj_database_url.config(
+        default='sqlite:///' + str(BASE_DIR / 'db.sqlite3'),
+        conn_max_age=600
+    )
+}
 
 
 # ── Static files (CSS, JS, images) ────────
