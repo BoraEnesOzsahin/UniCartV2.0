@@ -138,8 +138,7 @@ else:
 DATABASES = {
     'default': dj_database_url.config(
         default=database_url or 'sqlite:///' + str(BASE_DIR / 'db.sqlite3'),
-        conn_max_age=0,
-        ssl_require=True,
+        conn_max_age=5,
     )
 }
 
