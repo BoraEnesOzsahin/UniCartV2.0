@@ -131,18 +131,18 @@ DB_SSL_MODE = os.getenv('DB_SSL_MODE', 'require')
 if DB_HOST and DB_NAME and DB_USER and DB_PASSWORD:
     DATABASES = {
         'default': {
-            'ENGINE': 'django_db_pool.postgresql_psycopg2',
+            # Harici django-db-pool yerine Django'nun kendi orijinal PostgreSQL motorunu kullanıyoruz
+            'ENGINE': 'django.db.backends.postgresql',
             'NAME': DB_NAME,
             'USER': DB_USER,
             'PASSWORD': DB_PASSWORD,
             'HOST': DB_HOST,
             'PORT': DB_PORT,
-            'CONN_MAX_AGE': 5,
-            'POOL': {
-                'MAXSIZE': 20,  # Keep low to avoid exhausting Supabase connection limits
-            },
+            # CONN_MAX_AGE değerini 0 yapıyoruz. Supabase Transaction modundayken (Port: 6543)
+            # işi biten bağlantıları hemen serbest bırakarak "max clients" hatasını önler.
+            'CONN_MAX_AGE': 0, 
             'OPTIONS': {
-                'sslmode': DB_SSL_MODE,
+                'sslmode': DB_SSL_MODE if DB_SSL_MODE else 'require',
             }
         }
     }
