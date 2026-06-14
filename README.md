@@ -122,17 +122,7 @@ python manage.py runserver
 UniCart is successfully deployed and running live on **Render**, a modern cloud platform for hosting web applications.
 
 * **Platform:** Render (https://render.com)
-* **Application Status:** ✅ Running without critical errors online
-* **Live URL:** [Visit UniCart Live](https://your-unicart-render-url.onrender.com) *(Update with your actual Render URL)*
-
-### Deployment Features
-
-* ✅ **Production-Ready:** Application runs smoothly in a production environment.
-* ✅ **Error Handling:** Comprehensive error handling ensures stability and reliability.
-* ✅ **Database Integration:** PostgreSQL database configured for production data persistence.
-* ✅ **Environment Security:** Sensitive credentials managed securely via environment variables.
-* ✅ **Continuous Availability:** Application is live and accessible 24/7.
-
+  
 ### Deployment Configuration
 
 * **Web Service:** Render Web Service with Python runtime
